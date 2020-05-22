@@ -1,0 +1,3750 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="svd_stylesheet.xsl"?>
+
+
+
+<!--
+  Modified by Redshift Labs Pty Ltd, 21 Mai 2020
+
+  Copyright (C) 2012-2014 ARM Limited. All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+   - Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+   - Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+   - Neither the name of ARM nor the names of its contributors may be used
+     to endorse or promote products derived from this software without
+     specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  POSSIBILITY OF SUCH DAMAGE.
+ -->
+
+<device schemaVersion="1.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="RSL-SVD.xsd" >
+  <vendor>Redshift Labs Pty Ltd</vendor>                                  <!-- device vendor name -->
+  <vendorID>RedshiftLabs</vendorID>                               <!-- device vendor short name -->
+  <name>UM8</name>                                                <!-- name of part-->
+  <series>IMU</series>                                            <!-- device series the device belongs to -->
+  <version>0.1</version>                                          <!-- version of this description, adding CMSIS-SVD 1.1 tags -->
+  <description>UM7 Board Peripheral Description</description>
+  <licenseText>                                                   <!-- this license text will appear in header file. \n force line breaks -->
+    Redshift Labs Pty Ltd modified this file\n
+
+    ARM Limited (ARM) is supplying this software for use with Cortex-M\n
+    processor based microcontroller, but can be equally used for other\n
+    suitable  processor architectures. This file can be freely distributed.\n
+    Modifications to this file shall be clearly marked.\n
+    \n
+    THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED\n
+    OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF\n
+    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE.\n
+    ARM SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR\n
+    CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
+  </licenseText>
+  <addressUnitBits>32</addressUnitBits>                           <!-- byte addressable memory -->
+  <width>32</width>                                               <!-- bus width is 32 bits -->
+
+  <!-- default settings implicitly inherited by subsequent sections -->
+  <size>32</size>                                                 <!-- this is the default size (number of bits) of all peripherals
+                                                                       and register that do not define "size" themselves -->
+  <access>read-write</access>                                     <!-- default access permission for all subsequent registers -->
+  <resetValue>0x00000000</resetValue>                             <!-- by default all bits of the registers are initialized to 0 on reset -->
+  <resetMask>0xFFFFFFFF</resetMask>                               <!-- by default all 32Bits of the registers are used -->
+
+  <peripherals>
+    <!-- Fusion Configuration Registers -->
+    <peripheral>
+      <name>RSL</name>
+      <version>0.1</version>
+      <description>Main register map for the UM7 board</description>
+      <baseAddress>0x00000000</baseAddress>
+      <size>32</size>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x500</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+
+      <!-- CREG_COM_SETTINGS: General communication settings -->
+        <register>
+          <name>CREG_COM_SETTINGS</name>
+          <description>The CREG_COM_SETTINGS register is used to set the boards serial port baud rate and to enable (disable) the automatic transmission of sensor data and estimated states (telemetry).</description>
+          <address>0x00</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- BAUD_RATE: Baud rate -->
+            <field>
+              <name>BAUD_RATE</name>
+              <description>Sets the baud rate of the boards main serial port:</description>
+              <bitRange>[31:28]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>9600</name>
+                  <description>Baud rate: 9600</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>14400</name>
+                  <description>Baud rate: 14400</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>19200</name>
+                  <description>Baud rate: 19200</description>
+                  <value>2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>38400</name>
+                  <description>Baud rate: 38400</description>
+                  <value>3</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>57600</name>
+                  <description>Baud rate: 57600</description>
+                  <value>4</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>115200</name>
+                  <description>Baud rate: 115200</description>
+                  <value>5</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>128000</name>
+                  <description>Baud rate: 128000</description>
+                  <value>6</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>153600</name>
+                  <description>Baud rate: 153600</description>
+                  <value>7</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>230400</name>
+                  <description>Baud rate: 230400</description>
+                  <value>8</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>256000</name>
+                  <description>Baud rate: 256000</description>
+                  <value>9</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>460800</name>
+                  <description>Baud rate: 460800</description>
+                  <value>10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>921600</name>
+                  <description>Baud rate: 921600</description>
+                  <value>11</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+            <!-- GPS_BAUD: GPS Baud rate -->
+            <field>
+              <name>GPS_BAUD</name>
+              <description>Sets the baud rate of the UM7 auxiliary serial port:</description>
+              <bitRange>[27:24]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>9600</name>
+                  <description>Baud rate: 9600</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>14400</name>
+                  <description>Baud rate: 14400</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>19200</name>
+                  <description>Baud rate: 19200</description>
+                  <value>2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>38400</name>
+                  <description>Baud rate: 38400</description>
+                  <value>3</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>57600</name>
+                  <description>Baud rate: 57600</description>
+                  <value>4</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>115200</name>
+                  <description>Baud rate: 115200</description>
+                  <value>5</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+            <!-- GPS: automatic transmission of GPS data -->
+            <field>
+              <name>GPS</name>
+              <description>If set, this bit causes GPS data to be transmitted automatically whenever new GPS data is received. GPS data is stored in registers 125 to 130. These registers will be transmitted in a batch packet of length 6 starting at address 125.</description>
+              <bitRange>[8:8]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-write</access>
+            </field>
+
+            <!-- SAT: automatic transmission of sattelite details -->
+            <field>
+              <name>SAT</name>
+              <description>If set, this bit causes satellite details to be transmitted whenever they are provided by the GPS. Satellite information is stored in registers 131 to 136. These registers will be transmitted in a batch packet of length 6 beginning at address 131.</description>
+              <bitRange>[4:4]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_COM_RATES1: Broadcast rate settings -->
+        <register>
+          <name>CREG_COM_RATES1</name>
+          <description>The CREG_COM_RATES1 register sets desired telemetry transmission rates in Hz for raw accelerometer, gyro, and magnetometer data. If the specified rate is 0, then no data is transmitted.</description>
+          <address>0x01</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- RAW_ACCEL_RATE: raw accelerometer data broadcast rate -->
+            <field>
+              <name>RAW_ACCEL_RATE</name>
+              <description>Specifies the desired raw accelerometer data broadcast rate in Hz. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.</description>
+              <bitRange>[31:24]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-write</access>
+            </field>
+
+            <!-- RAW_GYRO_RATE: raw gyro data broadcast rate -->
+            <field>
+              <name>RAW_GYRO_RATE</name>
+              <description>Specifies the desired raw gyro data broadcast rate in Hz. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.</description>
+              <bitRange>[23:16]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-write</access>
+            </field>
+
+            <!-- RAW_MAG_RATE: raw magnetometer data broadcast rate -->
+            <field>
+              <name>RAW_MAG_RATE</name>
+              <description>Specifies the desired raw magnetometer data broadcast rate in Hz. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.</description>
+              <bitRange>[15:8]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-write</access>
+            </field>
+
+          </fields>
+        </register>
+
+        <!-- CREG_COM_RATES2: Broadcast rate settings -->
+        <register>
+          <name>CREG_COM_RATES2</name>
+          <description>The CREG_COM_RATES2 register sets desired telemetry transmission rates for all raw data and temperature. If the specified rate is 0, then no data is transmitted.</description>
+          <address>0x02</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- TEMP_RATE: broadcast rate for temperature data -->
+            <field>
+              <name>TEMP_RATE</name>
+              <description>Specifies the desired broadcast rate for temperature data. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.</description>
+              <bitRange>[31:24]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-write</access>
+            </field>
+
+            <!-- ALL_RAW_RATE: broadcast rate for all raw sensor data -->
+            <field>
+              <name>ALL_RAW_RATE</name>
+              <description>Specifies the desired broadcast rate for all raw sensor data. If set, this overrides the broadcast rate setting for individual raw data broadcast rates. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.</description>
+              <bitRange>[7:0]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_COM_RATES3: Broadcast rate settings -->
+        <register>
+          <name>CREG_COM_RATES3</name>
+          <description>The CREG_COM_RATES3 register sets desired telemetry transmission rates for processed sensor data. If the specified rate is 0, then no data is transmitted.</description>
+          <address>0x03</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- PROC_ACCEL_RATE: broadcast rate for processed accelerometer data -->
+            <field>
+              <name>PROC_ACCEL_RATE</name>
+              <description>Specifies the desired broadcast rate for processed accelerometer data. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.</description>
+              <bitRange>[31:24]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-write</access>
+            </field>
+
+            <!-- PROC_GYRO_RATE: broadcast rate for processed rate gyro 1 data -->
+            <field>
+              <name>PROC_GYRO_RATE</name>
+              <description>Specifies the desired broadcast rate for processed rate gyro data. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.</description>
+              <bitRange>[23:16]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-write</access>
+            </field>
+
+            <!-- PROC_MAG_RATE: broadcast rate for processed rate magnetometer data -->
+            <field>
+              <name>PROC_MAG_RATE</name>
+              <description>Specifies the desired broadcast rate for processed magnetometer data. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.</description>
+              <bitRange>[15:8]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-write</access>
+            </field>
+
+          </fields>
+        </register>
+
+
+        <!-- CREG_COM_RATES4: Broadcast rate settings -->
+        <register>
+          <name>CREG_COM_RATES4</name>
+          <description>The CREG_COM_RATES4 register defines the desired telemetry transmission rates for all processed data. If the specified rate is 0, then no data is transmitted.</description>
+          <address>0x04</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+
+            <!-- ALL_PROC_RATE: broadcast rate for raw all processed sensor data -->
+            <field>
+              <name>ALL_PROC_RATE</name>
+              <description>Specifies the desired broadcast rate for raw all processed data. If set, this overrides the broadcast rate setting for individual processed data broadcast rates. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.</description>
+              <bitRange>[7:0]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+
+        <!-- CREG_COM_RATES5: Broadcast rate settings -->
+        <register>
+          <name>CREG_COM_RATES5</name>
+          <description>The CREG_COM_RATES5 register sets desired telemetry transmission rates for quaternions, Euler Angles, position, and velocity estimates. If the specified rate is 0, then no data is transmitted.</description>
+          <address>0x05</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+
+            <!-- QUAT_RATE -->
+            <field>
+              <name>QUAT_RATE</name>
+              <description>Specifies the desired broadcast rate for quaternion data. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.</description>
+              <bitRange>[31:24]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-write</access>
+            </field>
+
+            <!-- EULER_RATE -->
+            <field>
+              <name>EULER_RATE</name>
+              <description>Specifies the desired broadcast rate for Euler Angle data. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.</description>
+              <bitRange>[23:16]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-write</access>
+            </field>
+
+            <!-- POSITION_RATE -->
+            <field>
+              <name>POSITION_RATE</name>
+              <description>Specifies the desired broadcast rate position. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.</description>
+              <bitRange>[15:8]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-write</access>
+            </field>
+
+            <!-- VELOCITY_RATE -->
+            <field>
+              <name>VELOCITY_RATE</name>
+              <description>Specifies the desired broadcast rate for velocity. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.</description>
+              <bitRange>[7:0]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_COM_RATES6: Broadcast rate settings -->
+        <register>
+          <name>CREG_COM_RATES6</name>
+          <description>The CREG_COM_RATES6 register sets desired telemetry transmission rates for pose (Euler/position packet), health, and gyro bias estimates for the gyro 1 and gyro 2. If the specified rate is 0, then no data is transmitted.</description>
+          <address>0x06</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- POSE_RATE -->
+            <field>
+              <name>POSE_RATE</name>
+              <description>Specifies the desired broadcast rate for pose (Euler Angle and position) data. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.</description>
+              <bitRange>[31:24]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-write</access>
+            </field>
+
+            <!-- HEALTH_RATE -->
+            <field>
+              <name>HEALTH_RATE</name>
+              <description>Specifies the desired broadcast rate for the sensor health packet.</description>
+              <bitRange>[19:16]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>0</name>
+                  <description>Packet frequency: OFF</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>0_125</name>
+                  <description>Packet frequency: 0.125 Hz</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>0_25</name>
+                  <description>Packet frequency: 0.25 Hz</description>
+                  <value>2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>0_5</name>
+                  <description>Packet frequency: 0.5 Hz</description>
+                  <value>3</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>1</name>
+                  <description>Packet frequency: 1 Hz</description>
+                  <value>4</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>2</name>
+                  <description>Packet frequency: 2 Hz</description>
+                  <value>5</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>4</name>
+                  <description>Packet frequency: 4 Hz</description>
+                  <value>6</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+            <!-- GYRO_BIAS_RATE -->
+            <field>
+              <name>GYRO_BIAS_RATE</name>
+              <description>Specifies the desired broadcast rate for gyro bias estimates. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.</description>
+              <bitRange>[15:8]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-write</access>
+            </field>
+
+          </fields>
+        </register>
+
+        <!-- CREG_COM_RATES7: Broadcast rate settings -->
+        <register>
+          <name>CREG_COM_RATES7</name>
+          <description>The CREG_COM_RATES7 register sets desired telemetry transmission rates in Hz for NMEA packets.</description>
+          <address>0x07</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- NMEA_HEALTH_RATE -->
+            <field>
+              <name>NMEA_HEALTH_RATE</name>
+              <description>Specifies the desired broadcast rate for Redshift Labs Pty Ltd NMEA-style health packet.</description>
+              <bitRange>[31:28]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>0</name>
+                  <description>Packet frequency: OFF</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>1</name>
+                  <description>Packet frequency: 1 Hz</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>2</name>
+                  <description>Packet frequency: 2 Hz</description>
+                  <value>2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>4</name>
+                  <description>Packet frequency: 4 Hz</description>
+                  <value>3</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>5</name>
+                  <description>Packet frequency: 5 Hz</description>
+                  <value>4</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>10</name>
+                  <description>Packet frequency: 10 Hz</description>
+                  <value>5</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>15</name>
+                  <description>Packet frequency: 15 Hz</description>
+                  <value>6</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>20</name>
+                  <description>Packet frequency: 20 Hz</description>
+                  <value>7</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>30</name>
+                  <description>Packet frequency: 30 Hz</description>
+                  <value>8</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>40</name>
+                  <description>Packet frequency: 40 Hz</description>
+                  <value>9</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>50</name>
+                  <description>Packet frequency: 50 Hz</description>
+                  <value>10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>60</name>
+                  <description>Packet frequency: 60 Hz</description>
+                  <value>11</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>70</name>
+                  <description>Packet frequency: 70 Hz</description>
+                  <value>12</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>80</name>
+                  <description>Packet frequency: 80 Hz</description>
+                  <value>13</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>90</name>
+                  <description>Packet frequency: 90 Hz</description>
+                  <value>14</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>100</name>
+                  <description>Packet frequency: 100 Hz</description>
+                  <value>15</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+            <!-- NMEA_POSE_RATE -->
+            <field>
+              <name>NMEA_POSE_RATE</name>
+              <description>Specifies the desired broadcast rate for Redshift Labs Pty Ltd NMEA-style pose (Euler Angle/position) packet.</description>
+              <bitRange>[27:24]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>0</name>
+                  <description>Packet frequency: OFF</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>1</name>
+                  <description>Packet frequency: 1 Hz</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>2</name>
+                  <description>Packet frequency: 2 Hz</description>
+                  <value>2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>4</name>
+                  <description>Packet frequency: 4 Hz</description>
+                  <value>3</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>5</name>
+                  <description>Packet frequency: 5 Hz</description>
+                  <value>4</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>10</name>
+                  <description>Packet frequency: 10 Hz</description>
+                  <value>5</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>15</name>
+                  <description>Packet frequency: 15 Hz</description>
+                  <value>6</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>20</name>
+                  <description>Packet frequency: 20 Hz</description>
+                  <value>7</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>30</name>
+                  <description>Packet frequency: 30 Hz</description>
+                  <value>8</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>40</name>
+                  <description>Packet frequency: 40 Hz</description>
+                  <value>9</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>50</name>
+                  <description>Packet frequency: 50 Hz</description>
+                  <value>10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>60</name>
+                  <description>Packet frequency: 60 Hz</description>
+                  <value>11</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>70</name>
+                  <description>Packet frequency: 70 Hz</description>
+                  <value>12</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>80</name>
+                  <description>Packet frequency: 80 Hz</description>
+                  <value>13</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>90</name>
+                  <description>Packet frequency: 90 Hz</description>
+                  <value>14</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>100</name>
+                  <description>Packet frequency: 100 Hz</description>
+                  <value>15</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+            <!-- NMEA_ATTITUDE_RATE -->
+            <field>
+              <name>NMEA_ATTITUDE_RATE</name>
+              <description>Specifies the desired broadcast rate for Redshift Labs Pty Ltd NMEA-style attitude packet.</description>
+              <bitRange>[23:20]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>0</name>
+                  <description>Packet frequency: OFF</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>1</name>
+                  <description>Packet frequency: 1 Hz</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>2</name>
+                  <description>Packet frequency: 2 Hz</description>
+                  <value>2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>4</name>
+                  <description>Packet frequency: 4 Hz</description>
+                  <value>3</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>5</name>
+                  <description>Packet frequency: 5 Hz</description>
+                  <value>4</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>10</name>
+                  <description>Packet frequency: 10 Hz</description>
+                  <value>5</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>15</name>
+                  <description>Packet frequency: 15 Hz</description>
+                  <value>6</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>20</name>
+                  <description>Packet frequency: 20 Hz</description>
+                  <value>7</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>30</name>
+                  <description>Packet frequency: 30 Hz</description>
+                  <value>8</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>40</name>
+                  <description>Packet frequency: 40 Hz</description>
+                  <value>9</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>50</name>
+                  <description>Packet frequency: 50 Hz</description>
+                  <value>10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>60</name>
+                  <description>Packet frequency: 60 Hz</description>
+                  <value>11</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>70</name>
+                  <description>Packet frequency: 70 Hz</description>
+                  <value>12</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>80</name>
+                  <description>Packet frequency: 80 Hz</description>
+                  <value>13</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>90</name>
+                  <description>Packet frequency: 90 Hz</description>
+                  <value>14</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>100</name>
+                  <description>Packet frequency: 100 Hz</description>
+                  <value>15</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+            <!-- NMEA_SENSOR_RATE -->
+            <field>
+              <name>NMEA_SENSOR_RATE</name>
+              <description>Specifies the desired broadcast rate for Redshift Labs Pty Ltd NMEA-style sensor data packet.</description>
+              <bitRange>[19:16]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>0</name>
+                  <description>Packet frequency: OFF</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>1</name>
+                  <description>Packet frequency: 1 Hz</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>2</name>
+                  <description>Packet frequency: 2 Hz</description>
+                  <value>2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>4</name>
+                  <description>Packet frequency: 4 Hz</description>
+                  <value>3</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>5</name>
+                  <description>Packet frequency: 5 Hz</description>
+                  <value>4</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>10</name>
+                  <description>Packet frequency: 10 Hz</description>
+                  <value>5</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>15</name>
+                  <description>Packet frequency: 15 Hz</description>
+                  <value>6</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>20</name>
+                  <description>Packet frequency: 20 Hz</description>
+                  <value>7</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>30</name>
+                  <description>Packet frequency: 30 Hz</description>
+                  <value>8</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>40</name>
+                  <description>Packet frequency: 40 Hz</description>
+                  <value>9</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>50</name>
+                  <description>Packet frequency: 50 Hz</description>
+                  <value>10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>60</name>
+                  <description>Packet frequency: 60 Hz</description>
+                  <value>11</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>70</name>
+                  <description>Packet frequency: 70 Hz</description>
+                  <value>12</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>80</name>
+                  <description>Packet frequency: 80 Hz</description>
+                  <value>13</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>90</name>
+                  <description>Packet frequency: 90 Hz</description>
+                  <value>14</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>100</name>
+                  <description>Packet frequency: 100 Hz</description>
+                  <value>15</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+            <!-- NMEA_RATES_RATE -->
+            <field>
+              <name>NMEA_RATES_RATE</name>
+              <description>Specifies the desired broadcast rate for Redshift Labs Pty Ltd NMEA-style rate data packet.</description>
+              <bitRange>[15:12]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>0</name>
+                  <description>Packet frequency: OFF</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>1</name>
+                  <description>Packet frequency: 1 Hz</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>2</name>
+                  <description>Packet frequency: 2 Hz</description>
+                  <value>2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>4</name>
+                  <description>Packet frequency: 4 Hz</description>
+                  <value>3</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>5</name>
+                  <description>Packet frequency: 5 Hz</description>
+                  <value>4</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>10</name>
+                  <description>Packet frequency: 10 Hz</description>
+                  <value>5</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>15</name>
+                  <description>Packet frequency: 15 Hz</description>
+                  <value>6</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>20</name>
+                  <description>Packet frequency: 20 Hz</description>
+                  <value>7</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>30</name>
+                  <description>Packet frequency: 30 Hz</description>
+                  <value>8</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>40</name>
+                  <description>Packet frequency: 40 Hz</description>
+                  <value>9</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>50</name>
+                  <description>Packet frequency: 50 Hz</description>
+                  <value>10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>60</name>
+                  <description>Packet frequency: 60 Hz</description>
+                  <value>11</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>70</name>
+                  <description>Packet frequency: 70 Hz</description>
+                  <value>12</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>80</name>
+                  <description>Packet frequency: 80 Hz</description>
+                  <value>13</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>90</name>
+                  <description>Packet frequency: 90 Hz</description>
+                  <value>14</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>100</name>
+                  <description>Packet frequency: 100 Hz</description>
+                  <value>15</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+            <!-- NMEA_GPS_POSE_RATE -->
+            <field>
+              <name>NMEA_GPS_POSE_RATE</name>
+              <description>Specifies the desired broadcast rate for Redshift Labs Pty Ltd NMEA-style GPS pose packet.</description>
+              <bitRange>[11:8]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>0</name>
+                  <description>Packet frequency: OFF</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>1</name>
+                  <description>Packet frequency: 1 Hz</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>2</name>
+                  <description>Packet frequency: 2 Hz</description>
+                  <value>2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>4</name>
+                  <description>Packet frequency: 4 Hz</description>
+                  <value>3</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>5</name>
+                  <description>Packet frequency: 5 Hz</description>
+                  <value>4</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>10</name>
+                  <description>Packet frequency: 10 Hz</description>
+                  <value>5</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>15</name>
+                  <description>Packet frequency: 15 Hz</description>
+                  <value>6</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>20</name>
+                  <description>Packet frequency: 20 Hz</description>
+                  <value>7</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>30</name>
+                  <description>Packet frequency: 30 Hz</description>
+                  <value>8</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>40</name>
+                  <description>Packet frequency: 40 Hz</description>
+                  <value>9</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>50</name>
+                  <description>Packet frequency: 50 Hz</description>
+                  <value>10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>60</name>
+                  <description>Packet frequency: 60 Hz</description>
+                  <value>11</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>70</name>
+                  <description>Packet frequency: 70 Hz</description>
+                  <value>12</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>80</name>
+                  <description>Packet frequency: 80 Hz</description>
+                  <value>13</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>90</name>
+                  <description>Packet frequency: 90 Hz</description>
+                  <value>14</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>100</name>
+                  <description>Packet frequency: 100 Hz</description>
+                  <value>15</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+            <!-- NMEA_QUAT_RATE -->
+            <field>
+              <name>NMEA_QUAT_RATE</name>
+              <description>Specifies the desired broadcast rate for Redshift Labs Pty Ltd NMEA-style quaternion packet.</description>
+              <bitRange>[7:4]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>0</name>
+                  <description>Packet frequency: OFF</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>1</name>
+                  <description>Packet frequency: 1 Hz</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>2</name>
+                  <description>Packet frequency: 2 Hz</description>
+                  <value>2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>4</name>
+                  <description>Packet frequency: 4 Hz</description>
+                  <value>3</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>5</name>
+                  <description>Packet frequency: 5 Hz</description>
+                  <value>4</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>10</name>
+                  <description>Packet frequency: 10 Hz</description>
+                  <value>5</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>15</name>
+                  <description>Packet frequency: 15 Hz</description>
+                  <value>6</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>20</name>
+                  <description>Packet frequency: 20 Hz</description>
+                  <value>7</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>30</name>
+                  <description>Packet frequency: 30 Hz</description>
+                  <value>8</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>40</name>
+                  <description>Packet frequency: 40 Hz</description>
+                  <value>9</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>50</name>
+                  <description>Packet frequency: 50 Hz</description>
+                  <value>10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>60</name>
+                  <description>Packet frequency: 60 Hz</description>
+                  <value>11</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>70</name>
+                  <description>Packet frequency: 70 Hz</description>
+                  <value>12</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>80</name>
+                  <description>Packet frequency: 80 Hz</description>
+                  <value>13</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>90</name>
+                  <description>Packet frequency: 90 Hz</description>
+                  <value>14</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>100</name>
+                  <description>Packet frequency: 100 Hz</description>
+                  <value>15</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+          </fields>
+        </register>
+
+        <!-- CREG_MISC_SETTINGS: Misc. settings -->
+        <register>
+          <name>CREG_MISC_SETTINGS</name>
+          <description>This register contains miscellaneous filter and sensor control options.</description>
+          <address>0x08</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- PPS -->
+            <field>
+              <name>PPS</name>
+              <description>If set, this bit causes the TX2 pin on the IO Expansion header to be used as the PPS input from an external GPS module. PPS pulses will then be used to synchronize the system clock to UTC time of day.</description>
+              <bitRange>[8:8]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>PPS_OFF</name>
+                  <description>TX2 not used as PPS input from GPS</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>PPS_ON</name>
+                  <description>TX2 used as PPS input from GPS</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+            <!-- ZG -->
+            <field>
+              <name>ZG</name>
+              <description>If set, this bit causes the device to attempt to measure the rate gyro bias on startup. The sensor must be stationary on startup for this feature to work properly.</description>
+              <bitRange>[2:2]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>ZG_OFF</name>
+                  <description>NOT measure rate gyro bias on startup</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>ZG_ON</name>
+                  <description>Measure rate gyro bias on startup</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+            <!-- Q -->
+            <field>
+              <name>Q</name>
+              <description>If this bit is set, the sensor will run in quaternion mode instead of Euler Angle mode.</description>
+              <bitRange>[1:1]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>EULER_MODE</name>
+                  <description>The sensor will run in Euler Angle mode</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>QUATERNION_MODE</name>
+                  <description>The sensor will run in quaternion mode</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+            <!-- MAG -->
+            <field>
+              <name>MAG</name>
+              <description>If set, the magnetometer will be used in state updates.</description>
+              <bitRange>[0:0]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>MAG_NOT_IN_STATE</name>
+                  <description>NOT use magnetometer in state update</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>MAG_IN_STATE</name>
+                  <description>Use magnetometer in state update</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+          </fields>
+        </register>
+
+        <!-- CREG_HOME_NORTH -->
+        <register>
+          <name>CREG_HOME_NORTH</name>
+          <description>This register sets the north home latitude in degrees, used to convert GPS coordinates to position in meters from home.</description>
+          <address>0x09</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- SET_HOME_NORTH -->
+            <field>
+              <name>SET_HOME_NORTH</name>
+              <description>North Position (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_HOME_EAST -->
+        <register>
+          <name>CREG_HOME_EAST</name>
+          <description>This register sets the east home longitude in degrees, used to convert GPS coordinates to position in meters from home.</description>
+          <address>0x0A</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- SET_HOME_EAST -->
+            <field>
+              <name>SET_HOME_EAST</name>
+              <description>East Position (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_HOME_UP -->
+        <register>
+          <name>CREG_HOME_UP</name>
+          <description>This register sets the home altitude in meters. Used to convert GPS coordinates to position in meters from home.</description>
+          <address>0x0B</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- SET_HOME_UP -->
+            <field>
+              <name>SET_HOME_UP</name>
+              <description>Altitude Position (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_GYRO_TRIM_X -->
+        <register>
+          <name>CREG_GYRO_TRIM_X</name>
+          <description>This register sets the x-axis rate gyro trim, which is used to add additional bias compensation for the rate gyros during calls to the ZERO_GYRO_BIAS command.</description>
+          <address>0x0C</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GYRO_TRIM_X: Bias trim for x-axis rate gyro -->
+            <field>
+              <name>GYRO_TRIM_X</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_GYRO_TRIM_Y: Bias trim for y-axis rate gyro -->
+        <register>
+          <name>CREG_GYRO_TRIM_Y</name>
+          <description>This register sets the y-axis rate gyro trim, which is used to add additional bias compensation for the rate gyros during calls to the ZERO_GYRO_BIAS command.</description>
+          <address>0x0D</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GYRO_TRIM_Y -->
+            <field>
+              <name>GYRO_TRIM_Y</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_GYRO_TRIM_Z: Bias trim for z-axis rate gyro -->
+        <register>
+          <name>CREG_GYRO_TRIM_Z</name>
+          <description>This register sets the z-axis rate gyro trim, which is used to add additional bias compensation for the rate gyros during calls to the ZERO_GYRO_BIAS command.</description>
+          <address>0x0E</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GYRO_TRIM_Z -->
+            <field>
+              <name>GYRO_TRIM_Z</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+
+        <!-- CREG_MAG_CAL1_1: Row 1, Column 1 of magnetometer calibration matrix -->
+        <register>
+          <name>CREG_MAG_CAL1_1</name>
+          <description>Row 1, Column 1 of magnetometer calibration matrix.</description>
+          <address>0x0F</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_CAL1_1 -->
+            <field>
+              <name>MAG_CAL1_1</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_MAG_CAL1_2: Row 1, Column 2 of magnetometer calibration matrix -->
+        <register>
+          <name>CREG_MAG_1_CAL1_2</name>
+          <description>Row 1, Column 2 of magnetometer calibration matrix.</description>
+          <address>0x10</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_CAL1_2 -->
+            <field>
+              <name>MAG_CAL1_2</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_MAG_CAL1_3: Row 1, Column 3 of magnetometer calibration matrix -->
+        <register>
+          <name>CREG_MAG_CAL1_3</name>
+          <description>Row 1, Column 3 of magnetometer calibration matrix.</description>
+          <address>0x11</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_CAL1_3 -->
+            <field>
+              <name>MAG_CAL1_3</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_MAG_CAL2_1: Row 2, Column 1 of magnetometer calibration matrix -->
+        <register>
+          <name>CREG_MAG_CAL2_1</name>
+          <description>Row 2, Column 1 of magnetometer calibration matrix.</description>
+          <address>0x12</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_CAL2_1 -->
+            <field>
+              <name>MAG_CAL2_1</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_MAG_CAL2_2: Row 2, Column 2 of magnetometer calibration matrix -->
+        <register>
+          <name>CREG_MAG_CAL2_2</name>
+          <description>Row 2, Column 2 of magnetometer calibration matrix.</description>
+          <address>0x13</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_CAL2_2 -->
+            <field>
+              <name>MAG_CAL2_2</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_MAG_CAL2_3: Row 2, Column 3 of magnetometer calibration matrix -->
+        <register>
+          <name>CREG_MAG_CAL2_3</name>
+          <description>Row 2, Column 3 of magnetometer calibration matrix.</description>
+          <address>0x14</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_CAL2_3 -->
+            <field>
+              <name>MAG_CAL2_3</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_MAG_CAL3_1: Row 3, Column 1 of magnetometer calibration matrix -->
+        <register>
+          <name>CREG_MAG_CAL3_1</name>
+          <description>Row 3, Column 1 of magnetometer calibration matrix.</description>
+          <address>0x15</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_CAL3_1 -->
+            <field>
+              <name>MAG_CAL3_1</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_MAG_CAL3_2: Row 3, Column 2 of magnetometer calibration matrix -->
+        <register>
+          <name>CREG_MAG_CAL3_2</name>
+          <description>Row 3, Column 2 of magnetometer calibration matrix.</description>
+          <address>0x16</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_CAL3_2 -->
+            <field>
+              <name>MAG_CAL3_2</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_MAG_CAL3_3: Row 3, Column 3 of magnetometer calibration matrix -->
+        <register>
+          <name>CREG_MAG_CAL3_3</name>
+          <description>Row 3, Column 3 of magnetometer calibration matrix.</description>
+          <address>0x64</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_CAL3_3 -->
+            <field>
+              <name>MAG_CAL3_3</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_MAG_BIAS_X -->
+        <register>
+          <name>CREG_MAG_BIAS_X</name>
+          <description>This register stores a bias term for the magnetometer x-axis for hard-iron calibration. This term can be computed by performing magnetometer calibration with the Redshift labs Serial Interface.</description>
+          <address>0x18</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_BIAS_X -->
+            <field>
+              <name>MAG_BIAS_X</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_MAG_BIAS_Y -->
+        <register>
+          <name>CREG_MAG_1_BIAS_Y</name>
+          <description>This register stores a bias term for the magnetometer y-axis for hard-iron calibration. This term can be computed by performing magnetometer calibration with the Redshift labs Serial Interface.</description>
+          <address>0x19</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_BIAS_Y -->
+            <field>
+              <name>MAG_BIAS_Y</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_MAG_BIAS_Z -->
+        <register>
+          <name>CREG_MAG_BIAS_Z</name>
+          <description>This register stores a bias term for the magnetometer z-axis for hard-iron calibration. This term can be computed by performing magnetometer calibration with the Redshift labs Serial Interface.</description>
+          <address>0x1A</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_BIAS_Z -->
+            <field>
+              <name>MAG_BIAS_Z</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_ACCEL_CAL1_1: Row 1, Column 1 of accelerometer calibration matrix -->
+        <register>
+          <name>CREG_ACCEL_CAL1_1</name>
+          <description>Row 1, Column 1 of accelerometer calibration matrix.</description>
+          <address>0x1B</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_CAL1_1 -->
+            <field>
+              <name>ACCEL_CAL1_1</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_ACCEL_CAL1_2: Row 1, Column 2 of accelerometer calibration matrix -->
+        <register>
+          <name>CREG_ACCEL_CAL1_2</name>
+          <description>Row 1, Column 2 of accelerometer calibration matrix.</description>
+          <address>0x1C</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_CAL1_2 -->
+            <field>
+              <name>ACCEL_CAL1_2</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_ACCEL_CAL1_3: Row 1, Column 3 of accelerometer calibration matrix -->
+        <register>
+          <name>CREG_ACCEL_CAL1_3</name>
+          <description>Row 1, Column 3 of accelerometer calibration matrix.</description>
+          <address>0x1D</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_CAL1_3 -->
+            <field>
+              <name>ACCEL_CAL1_3</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_ACCEL_CAL2_1: Row 2, Column 1 of accelerometer calibration matrix -->
+        <register>
+          <name>CREG_ACCEL_CAL2_1</name>
+          <description>Row 2, Column 1 of accelerometer calibration matrix.</description>
+          <address>0x1E</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_CAL2_1 -->
+            <field>
+              <name>ACCEL_CAL2_1</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_ACCEL_CAL2_2: Row 2, Column 2 of accelerometer calibration matrix -->
+        <register>
+          <name>CREG_ACCEL_CAL2_2</name>
+          <description>Row 2, Column 2 of accelerometer calibration matrix.</description>
+          <address>0x1F</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_CAL2_2 -->
+            <field>
+              <name>ACCEL_CAL2_2</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_ACCEL_CAL2_3: Row 2, Column 3 of accelerometer calibration matrix -->
+        <register>
+          <name>CREG_ACCEL_CAL2_3</name>
+          <description>Row 2, Column 3 of accelerometer calibration matrix.</description>
+          <address>0x20</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_CAL2_3 -->
+            <field>
+              <name>ACCEL_CAL2_3</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_ACCEL_CAL3_1: Row 3, Column 1 of accelerometer calibration matrix -->
+        <register>
+          <name>CREG_ACCEL_CAL3_1</name>
+          <description>Row 3, Column 1 of accelerometer calibration matrix.</description>
+          <address>0x21</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_CAL3_1 -->
+            <field>
+              <name>ACCEL_CAL3_1</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_ACCEL_CAL3_2: Row 3, Column 2 of accelerometer calibration matrix -->
+        <register>
+          <name>CREG_ACCEL_CAL3_2</name>
+          <description>Row 3, Column 2 of accelerometer calibration matrix.</description>
+          <address>0x22</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_CAL3_2 -->
+            <field>
+              <name>ACCEL_CAL3_2</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_ACCEL_CAL3_3: Row 3, Column 3 of accelerometer calibration matrix -->
+        <register>
+          <name>CREG_ACCEL_CAL3_3</name>
+          <description>Row 3, Column 3 of accelerometer calibration matrix.</description>
+          <address>0x23</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_CAL3_3 -->
+            <field>
+              <name>ACCEL_CAL3_3</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_ACCEL_BIAS_X -->
+        <register>
+          <name>CREG_ACCEL_BIAS_X</name>
+          <description>This register stores a bias term for the accelerometer x-axis for bias calibration. This term can be computed by performing calibrate accelerometers command within the Redshift labs Serial Interface.</description>
+          <address>0x24</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_BIAS_X -->
+            <field>
+              <name>ACCEL_BIAS_X</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_ACCEL_BIAS_Y -->
+        <register>
+          <name>CREG_ACCEL_BIAS_Y</name>
+          <description>This register stores a bias term for the accelerometer y-axis for bias calibration. This term can be computed by performing calibrate accelerometers command within the Redshift labs Serial Interface.</description>
+          <address>0x25</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_BIAS_Y -->
+            <field>
+              <name>ACCEL_BIAS_Y</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CREG_ACCEL_BIAS_Z -->
+        <register>
+          <name>CREG_ACCEL_BIAS_Z</name>
+          <description>This register stores a bias term for the accelerometer z-axis for bias calibration. This term can be computed by performing calibrate accelerometers command within the Redshift labs Serial Interface.</description>
+          <address>0x26</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_BIAS_Z -->
+            <field>
+              <name>ACCEL_BIAS_Z</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+      <!-- Data registers -->
+
+        <!-- DREG_HEALTH -->
+        <register>
+          <name>DREG_HEALTH</name>
+          <description>The health register reports the current status of the GPS module and the other sensors on the board. Monitoring the health register is the easiest way to monitor the quality of the GPS lock and to watch for other problems that could affect the behavior of the board.</description>
+          <address>0x55</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+
+            <!-- SATS_USED -->
+            <field>
+              <name>SATS_USED</name>
+              <description>Reports the number of satellites used in the position solution.</description>
+              <bitRange>[31:26]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- HDOP -->
+            <field>
+              <name>HDOP</name>
+              <description>Reports the horizontal dilution of precision (HDOP) reported by the GPS. The actual HDOP value is equal to the contents of the HDOP bits divided by 10.</description>
+              <bitRange>[25:16]</bitRange>
+              <dataType>bitField</dataType>
+              <conversionScaleFactor>0.1</conversionScaleFactor>
+              <access>read-only</access>
+            </field>
+
+            <!-- SATS_IN_VIEW -->
+            <field>
+              <name>SATS_IN_VIEW</name>
+              <description>Reports the number of satellites in view.</description>
+              <bitRange>[15:10]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- OVF -->
+            <field>
+              <name>OVF</name>
+              <description>Overflow bit. This bit is set if the UM7 is attempting to transmit data over the serial port faster than is allowed given the baud-rate. If this bit is set, reduce broadcast rates in the COM_RATES registers.</description>
+              <bitRange>[8:8]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>OVF_OFF</name>
+                  <description>No overflow registered</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>OVF_ON</name>
+                  <description>Overflow registered, reduce broadcast rates</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+            <!-- MG_N -->
+            <field>
+              <name>MG_N</name>
+              <description>This bit is set if the sensor detects that the norm of the magnetometer measurement is too far away from 1.0 to be trusted. Usually indicates bad calibration, local field distortions, or both.</description>
+              <bitRange>[5:5]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>MAG_NORM_OK</name>
+                  <description>Magnetometer norm is OK</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>MAG_NORM_WARN</name>
+                  <description>Magnetometer norm is not OK</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+            <!-- ACC_N -->
+            <field>
+              <name>ACC_N</name>
+              <description>This bit is set if the sensor detects that the norm of the accelerometer measurement is too far away from 1G to be used (i.e. during aggressive acceleration or high vibration).</description>
+              <bitRange>[4:4]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>ACC_N_OFF</name>
+                  <description>No high acceleration / no high vibration detected</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>ACC_N_ON</name>
+                  <description>High acceleration / high vibration detected</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+            <!-- ACCEL -->
+            <field>
+              <name>ACCEL</name>
+              <description>This bit will be set if the accelerometer fails to initialize on startup.</description>
+              <bitRange>[3:3]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>ACCEL_STARTUP_OK</name>
+                  <description>Accelerometer startup OK</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>ACCEL_STARTUP_ERR</name>
+                  <description>Accelerometer startup error</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+            <!-- GYRO -->
+            <field>
+              <name>GYRO</name>
+              <description>This bit will be set if the rate gyro fails to initialize on startup.</description>
+              <bitRange>[2:2]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>GYRO_STARTUP_OK</name>
+                  <description>Gyro startup OK</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>GYRO_STARTUP_ERR</name>
+                  <description>Gyro startup error</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+            <!-- MAG -->
+            <field>
+              <name>MAG</name>
+              <description>This bit will be set if the magnetometer fails to initialize on startup.</description>
+              <bitRange>[1:1]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>MAG_STARTUP_OK</name>
+                  <description>Magnetometer startup OK</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>MAG_STARTUP_ERR</name>
+                  <description>Magnetometer startup error</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+            <!-- GPS -->
+            <field>
+              <name>GPS</name>
+              <description>This bit is set if the GPS fails to send a packet for more than two seconds. If a GPS packet is ever received, this bit is cleared.</description>
+              <bitRange>[0:0]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>GPS_GETTING_PACKETS</name>
+                  <description>GPS packet was received within last 2 seconds</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>GPS_NOT_GETTING_PACKETS</name>
+                  <description>GPS packet was not received within last 2 seconds</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+
+          </fields>
+        </register>
+
+        <!-- DREG_GYRO_RAW_XY -->
+        <register>
+          <name>DREG_GYRO_RAW_XY</name>
+          <description>Contains raw X and Y axis rate gyro data.</description>
+          <address>0x56</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GYRO_RAW_X -->
+            <field>
+              <name>GYRO_RAW_X</name>
+              <description>Gyro X (2s complement 16-bit integer)</description>
+              <bitRange>[31:16]</bitRange>
+              <dataType>int16_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- GYRO_RAW_Y -->
+            <field>
+              <name>GYRO_RAW_Y</name>
+              <description>Gyro Y (2s complement 16-bit integer)</description>
+              <bitRange>[15:0]</bitRange>
+              <dataType>int16_t</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GYRO_RAW_Z -->
+        <register>
+          <name>DREG_GYRO_RAW_Z</name>
+          <description>Contains raw Z axis rate gyro data.</description>
+          <address>0x57</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GYRO_RAW_Z -->
+            <field>
+              <name>GYRO_RAW_Z</name>
+              <description>Gyro Z (2s complement 16-bit integer)</description>
+              <bitRange>[31:16]</bitRange>
+              <dataType>int16_t</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GYRO_RAW_TIME -->
+        <register>
+          <name>DREG_GYRO_RAW_TIME</name>
+          <description>Contains time at which the last rate gyro data was acquired.</description>
+          <address>0x160</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GYRO_RAW_TIME -->
+            <field>
+              <name>GYRO_RAW_TIME</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_ACCEL_RAW_XY -->
+        <register>
+          <name>DREG_ACCEL_RAW_XY</name>
+          <description>Contains raw X and Y axis accelerometer data.</description>
+          <address>0x59</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_RAW_X -->
+            <field>
+              <name>ACCEL_RAW_X</name>
+              <description>Accel X (2s complement 16-bit integer)</description>
+              <bitRange>[31:16]</bitRange>
+              <dataType>int16_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- ACCEL_RAW_Y -->
+            <field>
+              <name>ACCEL_RAW_Y</name>
+              <description>Accel Y (2s complement 16-bit integer)</description>
+              <bitRange>[15:0]</bitRange>
+              <dataType>int16_t</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_ACCEL_RAW_Z -->
+        <register>
+          <name>DREG_ACCEL_RAW_Z</name>
+          <description>Contains raw Z axis accelerometer data.</description>
+          <address>0x5A</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_RAW_Z -->
+            <field>
+              <name>ACCEL_RAW_Z</name>
+              <description>Accel Z (2s complement 16-bit integer)</description>
+              <bitRange>[31:16]</bitRange>
+              <dataType>int16_t</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_ACCEL_RAW_TIME -->
+        <register>
+          <name>DREG_ACCEL_RAW_TIME</name>
+          <description>Contains time at which the last raw data sample for the accelerometer was acquired.</description>
+          <address>0x5B</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_RAW_TIME -->
+            <field>
+              <name>ACCEL_RAW_TIME</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_MAG_RAW_XY -->
+        <register>
+          <name>DREG_MAG_RAW_XY</name>
+          <description>Contains raw X and Y axis magnetometer data.</description>
+          <address>0x5C</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_RAW_X -->
+            <field>
+              <name>MAG_RAW_X</name>
+              <description>Magnetometer X (2s complement 16-bit integer)</description>
+              <bitRange>[31:16]</bitRange>
+              <dataType>int16_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- MAG_RAW_Y -->
+            <field>
+              <name>MAG_RAW_Y</name>
+              <description>Magnetometer Y (2s complement 16-bit integer)</description>
+              <bitRange>[15:0]</bitRange>
+              <dataType>int16_t</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_MAG_RAW_Z -->
+        <register>
+          <name>DREG_MAG_RAW_Z</name>
+          <description>Contains raw Z axis magnetometer data.</description>
+          <address>0x5D</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_RAW_Z -->
+            <field>
+              <name>MAG_RAW_Z</name>
+              <description>Magnetometer Z (2s complement 16-bit integer)</description>
+              <bitRange>[31:16]</bitRange>
+              <dataType>int16_t</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_MAG_RAW_TIME -->
+        <register>
+          <name>DREG_MAG_RAW_TIME</name>
+          <description>Contains time at which the last magnetometer data from the magnetometer was acquired.</description>
+          <address>0x5E</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_RAW_TIME -->
+            <field>
+              <name>MAG_RAW_TIME</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_TEMPERATURE -->
+        <register>
+          <name>DREG_TEMPERATURE</name>
+          <description>Contains the temperature output of the onboard temperature sensor.</description>
+          <address>0x5F</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- TEMPERATURE -->
+            <field>
+              <name>TEMPERATURE</name>
+              <description>Temperature in degrees Celcius (32-bit IEEE Floating Point)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_TEMPERATURE_TIME -->
+        <register>
+          <name>DREG_TEMPERATURE_TIME</name>
+          <description>Contains time at which the last temperature was acquired.</description>
+          <address>0x60</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- TEMPERATURE_TIME -->
+            <field>
+              <name>TEMPERATURE_TIME</name>
+              <description>32-bit IEEE Floating Point Value</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GYRO_PROC_X -->
+        <register>
+          <name>DREG_GYRO_PROC_X</name>
+          <description>Contains the actual measured angular rate from the gyro for the x axis in degrees/sec after calibration has been applied.</description>
+          <address>0x61</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GYRO_PROC_X -->
+            <field>
+              <name>GYRO_PROC_X</name>
+              <description>Gyro X in degrees / sec (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GYRO_PROC_Y -->
+        <register>
+          <name>DREG_GYRO_PROC_Y</name>
+          <description>Contains the actual measured angular rate from the gyro for the y axis in degrees/sec after calibration has been applied.</description>
+          <address>0x62</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GYRO_PROC_Y -->
+            <field>
+              <name>GYRO_PROC_Y</name>
+              <description>Gyro Y in degrees / sec (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GYRO_PROC_Z -->
+        <register>
+          <name>DREG_GYRO_PROC_Z</name>
+          <description>Contains the actual measured angular rate from the gyro for the z axis in degrees/sec after calibration has been applied.</description>
+          <address>0x63</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GYRO_PROC_Z -->
+            <field>
+              <name>GYRO_PROC_Z</name>
+              <description>Gyro Z in degrees / sec (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GYRO_PROC_TIME -->
+        <register>
+          <name>DREG_GYRO_PROC_TIME</name>
+          <description>Contains the time at which the last rate gyro data from the gyro was measured.</description>
+          <address>0x64</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GYRO_PROC_TIME -->
+            <field>
+              <name>GYRO_PROC_TIME</name>
+              <description>Gyro time stamp (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_ACCEL_PROC_X -->
+        <register>
+          <name>DREG_ACCEL_PROC_X</name>
+          <description>Contains the actual measured acceleration from the accelerometer for the x axis in m/s2 after calibration has been applied.</description>
+          <address>0x65</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_PROC_X -->
+            <field>
+              <name>ACCEL_PROC_X</name>
+              <description>Acceleration X in m/s2 (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_ACCEL_PROC_Y -->
+        <register>
+          <name>DREG_ACCEL_PROC_Y</name>
+          <description>Contains the actual measured acceleration from the accelerometer for the y axis in m/s2 after calibration has been applied.</description>
+          <address>0x66</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_PROC_Y -->
+            <field>
+              <name>ACCEL_PROC_Y</name>
+              <description>Acceleration Y in m/s2 (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_ACCEL_PROC_Z -->
+        <register>
+          <name>DREG_ACCEL_PROC_Z</name>
+          <description>Contains the actual measured acceleration from the accelerometer for the z axis in m/s2 after calibration has been applied.</description>
+          <address>0x67</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_PROC_Z -->
+            <field>
+              <name>ACCEL_PROC_Z</name>
+              <description>Acceleration Z in m/s2 (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_ACCEL_PROC_TIME -->
+        <register>
+          <name>DREG_ACCEL_PROC_TIME</name>
+          <description>Contains the time at which the last acceleration data from the accelerometer was measured.</description>
+          <address>0x68</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_PROC_TIME -->
+            <field>
+              <name>ACCEL_PROC_TIME</name>
+              <description>Accelerometer time stamp (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+
+        <!-- DREG_MAG_PROC_X -->
+        <register>
+          <name>DREG_MAG_PROC_X</name>
+          <description>Contains the actual measured magnetic field from the magnetometer for the x axis after calibration has been applied.</description>
+          <address>0x69</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_PROC_X -->
+            <field>
+              <name>MAG_PROC_X</name>
+              <description>Magnetometer X (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_MAG_PROC_Y -->
+        <register>
+          <name>DREG_MAG_PROC_Y</name>
+          <description>Contains the actual measured magnetic field from the magnetometer for the y axis after calibration has been applied.</description>
+          <address>0x6A</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_PROC_Y -->
+            <field>
+              <name>MAG_PROC_Y</name>
+              <description>Magnetometer Y (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_MAG_PROC_Z -->
+        <register>
+          <name>DREG_MAG_PROC_Z</name>
+          <description>Contains the actual measured magnetic field from the magnetometer for the z axis after calibration has been applied.</description>
+          <address>0x6B</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_PROC_Z -->
+            <field>
+              <name>MAG_PROC_Z</name>
+              <description>Magnetometer Z (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_MAG_PROC_TIME -->
+        <register>
+          <name>DREG_MAG_PROC_TIME</name>
+          <description>Contains the time stamp at which the calibrated magnetometer data was acquired.</description>
+          <address>0x6C</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- MAG_PROC_TIME -->
+            <field>
+              <name>MAG_PROC_TIME</name>
+              <description>Magnetometer time stamp (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_QUAT_AB -->
+        <register>
+          <name>DREG_QUAT_AB</name>
+          <description>Contains the first two components (a and b) of the estimated quaternion attitude.</description>
+          <address>0x6D</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- QUAT_A -->
+            <field>
+              <name>QUAT_A</name>
+              <description>First quaternion component. Stored as a 16-bit signed integer. To get the actual value, divide by 29789.09091.</description>
+              <bitRange>[31:16]</bitRange>
+              <dataType>int16_t</dataType>
+              <conversionScaleFactor>3.356933593647555e-05</conversionScaleFactor>
+              <access>read-only</access>
+            </field>
+
+            <!-- QUAT_B -->
+            <field>
+              <name>QUAT_B</name>
+              <description>Second quaternion component. Stored as a 16-bit signed integer. To get the actual value, divide by 29789.09091.</description>
+              <bitRange>[15:0]</bitRange>
+              <dataType>int16_t</dataType>
+              <conversionScaleFactor>3.356933593647555e-05</conversionScaleFactor>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_QUAT_CD -->
+        <register>
+          <name>DREG_QUAT_CD</name>
+          <description>Contains the second two components (c and d) of the estimated quaternion attitude.</description>
+          <address>0x6E</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- QUAT_C -->
+            <field>
+              <name>QUAT_C</name>
+              <description>Third quaternion component. Stored as a 16-bit signed integer. To get the actual value, divide by 29789.09091.</description>
+              <bitRange>[31:16]</bitRange>
+              <dataType>int16_t</dataType>
+              <conversionScaleFactor>3.356933593647555e-05</conversionScaleFactor>
+              <access>read-only</access>
+            </field>
+
+            <!-- QUAT_D -->
+            <field>
+              <name>QUAT_D</name>
+              <description>Fourth quaternion component. Stored as a 16-bit signed integer. To get the actual value, divide by 29789.09091.</description>
+              <bitRange>[15:0]</bitRange>
+              <dataType>int16_t</dataType>
+              <conversionScaleFactor>3.356933593647555e-05</conversionScaleFactor>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_QUAT_TIME -->
+        <register>
+          <name>DREG_QUAT_TIME</name>
+          <description>Contains the time that the quaternion attitude was estimated.</description>
+          <address>0x6F</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- QUAT_TIME -->
+            <field>
+              <name>QUAT_TIME</name>
+              <description>Quaternion time (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_EULER_PHI_THETA -->
+        <register>
+          <name>DREG_EULER_PHI_THETA</name>
+          <description>Contains the pitch and roll angle estimates.</description>
+          <address>0x70</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- PHI -->
+            <field>
+              <name>PHI</name>
+              <description>Roll angle. Stored as a 16-bit signed integer. To get the actual value, divide by 91.02222.</description>
+              <bitRange>[31:16]</bitRange>
+              <dataType>int16_t</dataType>
+              <conversionScaleFactor>0.010986328393220907</conversionScaleFactor>
+              <access>read-only</access>
+            </field>
+
+            <!-- THETA -->
+            <field>
+              <name>THETA</name>
+              <description>Pitch angle. Stored as a 16-bit signed integer. To get the actual value, divide by 91.02222.</description>
+              <bitRange>[15:0]</bitRange>
+              <dataType>int16_t</dataType>
+              <conversionScaleFactor>0.010986328393220907</conversionScaleFactor>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_EULER_PSI -->
+        <register>
+          <name>DREG_EULER_PSI</name>
+          <description>Contains the yaw angle estimate.</description>
+          <address>0x71</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- PSI -->
+            <field>
+              <name>PSI</name>
+              <description>Yaw angle. Stored as a 16-bit signed integer. To get the actual value, divide by 91.02222.</description>
+              <bitRange>[31:16]</bitRange>
+              <dataType>int16_t</dataType>
+              <conversionScaleFactor>0.010986328393220907</conversionScaleFactor>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_EULER_PHI_THETA_DOT -->
+        <register>
+          <name>DREG_EULER_PHI_THETA_DOT</name>
+          <description>Contains the pitch and roll rate estimates.</description>
+          <address>0x72</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- PHI_DOT -->
+            <field>
+              <name>PHI_DOT</name>
+              <description>Roll rate. Stored as a 16-bit signed integer. To get the actual value, divide by 16.0.</description>
+              <bitRange>[31:16]</bitRange>
+              <dataType>int16_t</dataType>
+              <conversionScaleFactor>0.0625</conversionScaleFactor>
+              <access>read-only</access>
+            </field>
+
+            <!-- THETA_DOT -->
+            <field>
+              <name>THETA_DOT</name>
+              <description>Pitch rate. Stored as a 16-bit signed integer. To get the actual value, divide by 16.0.</description>
+              <bitRange>[15:0]</bitRange>
+              <dataType>int16_t</dataType>
+              <conversionScaleFactor>0.0625</conversionScaleFactor>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_EULER_PSI_DOT -->
+        <register>
+          <name>DREG_EULER_PSI_DOT</name>
+          <description>Contains the yaw rate estimate.</description>
+          <address>0x73</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- PSI_DOT -->
+            <field>
+              <name>PSI_DOT</name>
+              <description>Yaw rate. Stored as a 16-bit signed integer. To get the actual value, divide by 16.0.</description>
+              <bitRange>[31:16]</bitRange>
+              <dataType>int16_t</dataType>
+              <conversionScaleFactor>0.0625</conversionScaleFactor>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_EULER_TIME -->
+        <register>
+          <name>DREG_EULER_TIME</name>
+          <description>Contains the time that the Euler Angles were estimated.</description>
+          <address>0x74</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- EULER_TIME -->
+            <field>
+              <name>EULER_TIME</name>
+              <description>Euler time (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_POSITION_NORTH -->
+        <register>
+          <name>DREG_POSITION_NORTH</name>
+          <description>Contains the measured north position in meters from the latitude specified in CREG_HOME_NORTH.</description>
+          <address>0x75</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- POSITION_NORTH -->
+            <field>
+              <name>POSITION_NORTH</name>
+              <description>North Position (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_POSITION_EAST -->
+        <register>
+          <name>DREG_POSITION_EAST</name>
+          <description>Contains the measured east position in meters from the longitude specified in CREG_HOME_EAST.</description>
+          <address>0x76</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- POSITION_EAST -->
+            <field>
+              <name>POSITION_EAST</name>
+              <description>East Position (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_POSITION_UP -->
+        <register>
+          <name>DREG_POSITION_UP</name>
+          <description>Contains the measured altitude in meters from the altitude specified in CREG_HOME_UP.</description>
+          <address>0x77</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- POSITION_UP -->
+            <field>
+              <name>POSITION_UP</name>
+              <description>Altitude (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_POSITION_TIME -->
+        <register>
+          <name>DREG_POSITION_TIME</name>
+          <description>Contains the time at which the position was acquired.</description>
+          <address>0x78</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- POSITION_TIME -->
+            <field>
+              <name>POSITION_TIME</name>
+              <description>Position Time (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_VELOCITY_NORTH -->
+        <register>
+          <name>DREG_VELOCITY_NORTH</name>
+          <description>Contains the measured north velocity in m/s.</description>
+          <address>0x79</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- VELOCITY_NORTH -->
+            <field>
+              <name>VELOCITY_NORTH</name>
+              <description>North Velocity (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_VELOCITY_EAST -->
+        <register>
+          <name>DREG_VELOCITY_EAST</name>
+          <description>Contains the measured east velocity in m/s.</description>
+          <address>0x7A</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- VELOCITY_EAST -->
+            <field>
+              <name>VELOCITY_EAST</name>
+              <description>East Velocity (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_VELOCITY_UP -->
+        <register>
+          <name>DREG_VELOCITY_UP</name>
+          <description>Contains the measured altitude velocity in m/s.</description>
+          <address>0x7B</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- VELOCITY_UP -->
+            <field>
+              <name>VELOCITY_UP</name>
+              <description>Altitude Velocity (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_VELOCITY_TIME -->
+        <register>
+          <name>DREG_VELOCITY_TIME</name>
+          <description>Contains the time at which the velocity was measured.</description>
+          <address>0x7C</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- VELOCITY_TIME -->
+            <field>
+              <name>VELOCITY_TIME</name>
+              <description>Velocity time (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GPS_LATITUDE -->
+        <register>
+          <name>DREG_GPS_LATITUDE</name>
+          <description>Contains the GPS-reported latitude in degrees.</description>
+          <address>0x7D</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GPS_LATITUDE -->
+            <field>
+              <name>GPS_LATITUDE</name>
+              <description>GPS Latitude (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+
+        <!-- DREG_GPS_LONGITUDE -->
+        <register>
+          <name>DREG_GPS_LONGITUDE</name>
+          <description>Contains the GPS-reported longitude in degrees.</description>
+          <address>0x7E</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GPS_LONGITUDE -->
+            <field>
+              <name>GPS_LONGITUDE</name>
+              <description>GPS Longitude (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GPS_ALTITUDE -->
+        <register>
+          <name>DREG_GPS_ALTITUDE</name>
+          <description>Contains the GPS-reported altitude in meters.</description>
+          <address>0x7F</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GPS_ALTITUDE -->
+            <field>
+              <name>GPS_ALTITUDE</name>
+              <description>GPS Altitude (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GPS_COURSE -->
+        <register>
+          <name>DREG_GPS_COURSE</name>
+          <description>Contains the GPS-reported course in degrees.</description>
+          <address>0x80</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GPS_COURSE -->
+            <field>
+              <name>GPS_COURSE</name>
+              <description>GPS Course (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+
+        <!-- DREG_GPS_SPEED -->
+        <register>
+          <name>DREG_GPS_SPEED</name>
+          <description>Contains the GPS-reported speed in m/s.</description>
+          <address>0x81</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GPS_SPEED -->
+            <field>
+              <name>GPS_SPEED</name>
+              <description>GPS Speed (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GPS_TIME -->
+        <register>
+          <name>DREG_GPS_TIME</name>
+          <description>Contains the GPS-reported time in seconds from the last epoch.</description>
+          <address>0x82</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GPS_TIME -->
+            <field>
+              <name>GPS_TIME</name>
+              <description>GPS Speed (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GPS_SAT_1_2 -->
+        <register>
+          <name>DREG_GPS_SAT_1_2</name>
+          <description>Contains satellite ID and signal-to-noise ratio (SNR) for satellites 1 and 2.</description>
+          <address>0x83</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- SAT_1_ID -->
+            <field>
+              <name>SAT_1_ID</name>
+              <description>Satellite 1 ID</description>
+              <bitRange>[31:24]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_1_SNR -->
+            <field>
+              <name>SAT_1_SNR</name>
+              <description>Signal-to-Noise Ratio of satellite 1 as reported by GPS receiver.</description>
+              <bitRange>[23:16]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_2_ID -->
+            <field>
+              <name>SAT_2_ID</name>
+              <description>Satellite 2 ID</description>
+              <bitRange>[15:8]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_2_SNR -->
+            <field>
+              <name>SAT_2_SNR</name>
+              <description>Signal-to-Noise Ratio of satellite 2 as reported by GPS receiver.</description>
+              <bitRange>[7:0]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GPS_SAT_3_4 -->
+        <register>
+          <name>DREG_GPS_SAT_3_4</name>
+          <description>Contains satellite ID and signal-to-noise ratio (SNR) for satellites 3 and 4.</description>
+          <address>0x84</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- SAT_3_ID -->
+            <field>
+              <name>SAT_3_ID</name>
+              <description>Satellite 3 ID</description>
+              <bitRange>[31:24]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_3_SNR -->
+            <field>
+              <name>SAT_3_SNR</name>
+              <description>Signal-to-Noise Ratio of satellite 3 as reported by GPS receiver.</description>
+              <bitRange>[23:16]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_4_ID -->
+            <field>
+              <name>SAT_4_ID</name>
+              <description>Satellite 4 ID</description>
+              <bitRange>[15:8]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_4_SNR -->
+            <field>
+              <name>SAT_4_SNR</name>
+              <description>Signal-to-Noise Ratio of satellite 4 as reported by GPS receiver.</description>
+              <bitRange>[7:0]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GPS_SAT_5_6 -->
+        <register>
+          <name>DREG_GPS_SAT_5_6</name>
+          <description>Contains satellite ID and signal-to-noise ratio (SNR) for satellites 5 and 6.</description>
+          <address>0x85</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- SAT_5_ID -->
+            <field>
+              <name>SAT_5_ID</name>
+              <description>Satellite 5 ID</description>
+              <bitRange>[31:24]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_5_SNR -->
+            <field>
+              <name>SAT_5_SNR</name>
+              <description>Signal-to-Noise Ratio of satellite 5 as reported by GPS receiver.</description>
+              <bitRange>[23:16]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_6_ID -->
+            <field>
+              <name>SAT_6_ID</name>
+              <description>Satellite 6 ID</description>
+              <bitRange>[15:8]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_6_SNR -->
+            <field>
+              <name>SAT_6_SNR</name>
+              <description>Signal-to-Noise Ratio of satellite 6 as reported by GPS receiver.</description>
+              <bitRange>[7:0]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GPS_SAT_7_8 -->
+        <register>
+          <name>DREG_GPS_SAT_7_8</name>
+          <description>Contains satellite ID and signal-to-noise ratio (SNR) for satellites 7 and 8.</description>
+          <address>0x86</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- SAT_7_ID -->
+            <field>
+              <name>SAT_7_ID</name>
+              <description>Satellite 7 ID</description>
+              <bitRange>[31:24]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_7_SNR -->
+            <field>
+              <name>SAT_7_SNR</name>
+              <description>Signal-to-Noise Ratio of satellite 7 as reported by GPS receiver.</description>
+              <bitRange>[23:16]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_8_ID -->
+            <field>
+              <name>SAT_8_ID</name>
+              <description>Satellite 8 ID</description>
+              <bitRange>[15:8]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_8_SNR -->
+            <field>
+              <name>SAT_8_SNR</name>
+              <description>Signal-to-Noise Ratio of satellite 8 as reported by GPS receiver.</description>
+              <bitRange>[7:0]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GPS_SAT_7_8 -->
+        <register>
+          <name>DREG_GPS_SAT_7_8</name>
+          <description>Contains satellite ID and signal-to-noise ratio (SNR) for satellites 7 and 8.</description>
+          <address>0x86</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- SAT_7_ID -->
+            <field>
+              <name>SAT_7_ID</name>
+              <description>Satellite 7 ID</description>
+              <bitRange>[31:24]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_7_SNR -->
+            <field>
+              <name>SAT_7_SNR</name>
+              <description>Signal-to-Noise Ratio of satellite 7 as reported by GPS receiver.</description>
+              <bitRange>[23:16]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_8_ID -->
+            <field>
+              <name>SAT_8_ID</name>
+              <description>Satellite 8 ID</description>
+              <bitRange>[15:8]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_8_SNR -->
+            <field>
+              <name>SAT_8_SNR</name>
+              <description>Signal-to-Noise Ratio of satellite 8 as reported by GPS receiver.</description>
+              <bitRange>[7:0]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GPS_SAT_9_10 -->
+        <register>
+          <name>DREG_GPS_SAT_9_10</name>
+          <description>Contains satellite ID and signal-to-noise ratio (SNR) for satellites 9 and 10.</description>
+          <address>0x87</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- SAT_9_ID -->
+            <field>
+              <name>SAT_9_ID</name>
+              <description>Satellite 9 ID</description>
+              <bitRange>[31:24]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_9_SNR -->
+            <field>
+              <name>SAT_9_SNR</name>
+              <description>Signal-to-Noise Ratio of satellite 9 as reported by GPS receiver.</description>
+              <bitRange>[23:16]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_10_ID -->
+            <field>
+              <name>SAT_10_ID</name>
+              <description>Satellite 10 ID</description>
+              <bitRange>[15:8]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_10_SNR -->
+            <field>
+              <name>SAT_10_SNR</name>
+              <description>Signal-to-Noise Ratio of satellite 10 as reported by GPS receiver.</description>
+              <bitRange>[7:0]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GPS_SAT_11_12 -->
+        <register>
+          <name>DREG_GPS_SAT_11_12</name>
+          <description>Contains satellite ID and signal-to-noise ratio (SNR) for satellites 11 and 12.</description>
+          <address>0x88</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- SAT_11_ID -->
+            <field>
+              <name>SAT_11_ID</name>
+              <description>Satellite 11 ID</description>
+              <bitRange>[31:24]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_11_SNR -->
+            <field>
+              <name>SAT_11_SNR</name>
+              <description>Signal-to-Noise Ratio of satellite 11 as reported by GPS receiver.</description>
+              <bitRange>[23:16]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_12_ID -->
+            <field>
+              <name>SAT_12_ID</name>
+              <description>Satellite 12 ID</description>
+              <bitRange>[15:8]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+
+            <!-- SAT_12_SNR -->
+            <field>
+              <name>SAT_12_SNR</name>
+              <description>Signal-to-Noise Ratio of satellite 12 as reported by GPS receiver.</description>
+              <bitRange>[7:0]</bitRange>
+              <dataType>uint8_t</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GYRO_BIAS_X -->
+        <register>
+          <name>DREG_GYRO_BIAS_X</name>
+          <description>Contains the estimated x-axis bias for the gyro in degrees/s.</description>
+          <address>0x89</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GYRO_BIAS_X -->
+            <field>
+              <name>GYRO_BIAS_X</name>
+              <description>Gyro bias X (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GYRO_BIAS_Y -->
+        <register>
+          <name>DREG_GYRO_BIAS_Y</name>
+          <description>Contains the estimated y-axis bias for the gyro in degrees/s.</description>
+          <address>0x8A</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GYRO_BIAS_Y -->
+            <field>
+              <name>GYRO_BIAS_Y</name>
+              <description>Gyro bias Y (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DREG_GYRO_BIAS_Z -->
+        <register>
+          <name>DREG_GYRO_BIAS_Z</name>
+          <description>Contains the estimated z-axis bias for the gyro in degrees/s.</description>
+          <address>0x8B</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- GYRO_BIAS_Z -->
+            <field>
+              <name>GYRO_BIAS_Z</name>
+              <description>Gyro bias Z (32-bit IEEE Floating Point Value)</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- Commands -->
+        <!-- GET_FW_REVISION -->
+        <register>
+          <name>GET_FW_REVISION</name>
+          <description>Firmware build identification string: a four byte ASCII character sequence which corresponds to a firmware series.</description>
+          <address>0xAA</address>
+          <size>32</size>
+          <access>read-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- FW_REVISION -->
+            <field>
+              <name>FW_REVISION</name>
+              <description>Firmware revision string</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>string</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- FLASH_COMMIT -->
+        <register>
+          <name>FLASH_COMMIT</name>
+          <description>Causes the board to write all configuration settings to FLASH so that are stored in the non-volatile memory and remain when the power is cycled.</description>
+          <address>0xAB</address>
+          <size>32</size>
+          <access>write-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- FLASH_COMMIT -->
+            <field>
+              <name>FLASH_COMMIT</name>
+              <description>Command to write configuration settings to flash</description>
+              <bitRange>[0:0]</bitRange>
+              <dataType>bitField</dataType>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- RESET_TO_FACTORY -->
+        <register>
+          <name>RESET_TO_FACTORY</name>
+          <description>Causes the board to load default factory settings.</description>
+          <address>0xAC</address>
+          <size>32</size>
+          <access>write-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- RESET_TO_FACTORY_BIT -->
+            <field>
+              <name>RESET_TO_FACTORY_BIT</name>
+              <description>Reset to factory bit</description>
+              <bitRange>[0:0]</bitRange>
+              <dataType>bitField</dataType>
+              <access>write-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- ZERO_GYROS -->
+        <register>
+          <name>ZERO_GYROS</name>
+          <description>Causes the board to measure the gyro outputs and set the output trim registers to compensate for any non-zero bias. The board should be kept stationary while the zero operation is underway.</description>
+          <address>0xAD</address>
+          <size>32</size>
+          <access>write-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ZERO_GYROS_BIT -->
+            <field>
+              <name>ZERO_GYROS_BIT</name>
+              <description>Zero gyros bit</description>
+              <bitRange>[0:0]</bitRange>
+              <dataType>bitField</dataType>
+              <access>write-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- SET_HOME_POSITION -->
+        <register>
+          <name>SET_HOME_POSITION</name>
+          <description>Sets the current GPS latitude, longitude, and altitude as the home position. All future positions will be referenced to the current GPS position.</description>
+          <address>0xAE</address>
+          <size>32</size>
+          <access>write-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- SET_HOME_POSITION_BIT -->
+            <field>
+              <name>SET_HOME_POSITION_BIT</name>
+              <description>Set home position bit</description>
+              <bitRange>[0:0]</bitRange>
+              <dataType>bitField</dataType>
+              <access>write-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- SET_MAG_REFERENCE -->
+        <register>
+          <name>SET_MAG_REFERENCE</name>
+          <description>Sets the current yaw heading position as north.</description>
+          <address>0xB0</address>
+          <size>32</size>
+          <access>write-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- SET_MAG_REFERENCE_BIT -->
+            <field>
+              <name>SET_MAG_REFERENCE_BIT</name>
+              <description>Set magnetometer reference bit</description>
+              <bitRange>[0:0]</bitRange>
+              <dataType>bitField</dataType>
+              <access>write-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- CALIBRATE_ACCELEROMETERS -->
+        <register>
+          <name>CALIBRATE_ACCELEROMETERS</name>
+          <description>Reboots the board and performs a crude calibration on the accelerometers. Best performed on a flat surface.</description>
+          <address>0xB1</address>
+          <size>32</size>
+          <access>write-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- CALIBRATE_ACCELEROMETERS_BIT -->
+            <field>
+              <name>CALIBRATE_ACCELEROMETERS_BIT</name>
+              <description>Calibrate accelerometers bit</description>
+              <bitRange>[0:0]</bitRange>
+              <dataType>bitField</dataType>
+              <access>write-only</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- RESET_EKF -->
+        <register>
+          <name>RESET_EKF</name>
+          <description>Resets the EKF sensor fusion algorithm.</description>
+          <address>0xB3</address>
+          <size>32</size>
+          <access>write-only</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- RESET_EKF_BIT -->
+            <field>
+              <name>RESET_EKF_BIT</name>
+              <description>Reset EKF bit</description>
+              <bitRange>[0:0]</bitRange>
+              <dataType>bitField</dataType>
+              <access>write-only</access>
+            </field>
+          </fields>
+        </register>
+
+      </registers>
+    </peripheral>
+  </peripherals>
+</device>
