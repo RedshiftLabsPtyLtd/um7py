@@ -66,7 +66,7 @@
   <peripherals>
     <!-- Fusion Configuration Registers -->
     <peripheral>
-      <name>RSL</name>
+      <name>UM7_MAIN_REGISTER_MAP</name>
       <version>0.1</version>
       <description>Main register map for the UM7 board</description>
       <baseAddress>0x00000000</baseAddress>
@@ -3746,5 +3746,68 @@
 
       </registers>
     </peripheral>
+
+    <!-- Hidden Configuration Registers -->
+    <peripheral>
+      <name>UM7_HIDDEN_REGISTER_MAP</name>
+      <version>0.1</version>
+      <description>Hidden register map for the UM7 board</description>
+      <baseAddress>0x00000000</baseAddress>
+      <size>32</size>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x500</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+
+      <!-- HIDDEN_GYRO_VARIANCE -->
+        <register>
+          <name>HIDDEN_GYRO_VARIANCE</name>
+          <description>Gyro variance</description>
+          <address>0x00</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <!-- GYRO_VARIANCE -->
+            <field>
+              <name>GYRO_VARIANCE</name>
+              <description>Gyro variance for EKF</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <!-- HIDDEN_ACCEL_VARIANCE -->
+        <register>
+          <name>HIDDEN_ACCEL_VARIANCE</name>
+          <description>Accelerometer variance</description>
+          <address>0x01</address>
+          <size>32</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <!-- ACCEL_VARIANCE -->
+            <field>
+              <name>ACCEL_VARIANCE</name>
+              <description>Accelerometer variance IEEE floating point value.</description>
+              <bitRange>[31:0]</bitRange>
+              <dataType>float</dataType>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>
+
   </peripherals>
 </device>

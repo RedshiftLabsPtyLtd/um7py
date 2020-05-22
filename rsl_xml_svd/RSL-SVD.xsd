@@ -443,6 +443,10 @@
       </xs:choice>
       <!-- data type to interpret the corresponding bitfield -->
       <xs:element name="dataType" type="dataTypeType" minOccurs="0" maxOccurs="1"/>
+      <!-- conversionScaleFactor specifies scale factor `A` of linear conversion: result = A * original_value + B -->
+      <xs:element name="conversionScaleFactor" type="xs:float" minOccurs="0"/>
+      <!-- conversionBiasFactor specifies bias factor `B` of linear conversion: result = A * original_value + B -->
+      <xs:element name="conversionBiasFactor" type="xs:float" minOccurs="0"/>
       <!-- access describes the predefined permissions for the field. -->
       <xs:element name="access" type="accessType" minOccurs="0"/>
       <!-- predefined description of write side effects -->
@@ -451,10 +455,6 @@
       <xs:element name="writeConstraint" type="writeConstraintType" minOccurs="0"/>
       <!-- readAction specifies the read side effects. -->
       <xs:element name="readAction" type="readActionType" minOccurs="0"/>
-      <!-- conversionScaleFactor specifies scale factor `A` of linear conversion: result = A * original_value + B -->
-      <xs:element name="conversionScaleFactor" type="xs:float" minOccurs="0"/>
-      <!-- conversionBiasFactor specifies bias factor `B` of linear conversion: result = A * original_value + B -->
-      <xs:element name="conversionBiasFactor" type="xs:float" minOccurs="0"/>
       <!-- enumeratedValues derivedFrom=<identifierType> -->
       <xs:element name="enumeratedValues" type="enumerationType" minOccurs="0" maxOccurs="2">
       </xs:element>
