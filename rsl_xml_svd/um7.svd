@@ -2149,7 +2149,7 @@
         <register>
           <name>DREG_GYRO_RAW_TIME</name>
           <description>Contains time at which the last rate gyro data was acquired.</description>
-          <address>0x160</address>
+          <address>0x58</address>
           <size>32</size>
           <access>read-only</access>
           <resetValue>0x00000000</resetValue>
