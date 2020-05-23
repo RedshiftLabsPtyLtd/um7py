@@ -3354,55 +3354,6 @@
           </fields>
         </register>
 
-        <!-- DREG_GPS_SAT_7_8 -->
-        <register>
-          <name>DREG_GPS_SAT_7_8</name>
-          <description>Contains satellite ID and signal-to-noise ratio (SNR) for satellites 7 and 8.</description>
-          <address>0x86</address>
-          <size>32</size>
-          <access>read-only</access>
-          <resetValue>0x00000000</resetValue>
-          <resetMask>0xFFFFFFFF</resetMask>
-
-          <fields>
-            <!-- SAT_7_ID -->
-            <field>
-              <name>SAT_7_ID</name>
-              <description>Satellite 7 ID</description>
-              <bitRange>[31:24]</bitRange>
-              <dataType>uint8_t</dataType>
-              <access>read-only</access>
-            </field>
-
-            <!-- SAT_7_SNR -->
-            <field>
-              <name>SAT_7_SNR</name>
-              <description>Signal-to-Noise Ratio of satellite 7 as reported by GPS receiver.</description>
-              <bitRange>[23:16]</bitRange>
-              <dataType>uint8_t</dataType>
-              <access>read-only</access>
-            </field>
-
-            <!-- SAT_8_ID -->
-            <field>
-              <name>SAT_8_ID</name>
-              <description>Satellite 8 ID</description>
-              <bitRange>[15:8]</bitRange>
-              <dataType>uint8_t</dataType>
-              <access>read-only</access>
-            </field>
-
-            <!-- SAT_8_SNR -->
-            <field>
-              <name>SAT_8_SNR</name>
-              <description>Signal-to-Noise Ratio of satellite 8 as reported by GPS receiver.</description>
-              <bitRange>[7:0]</bitRange>
-              <dataType>uint8_t</dataType>
-              <access>read-only</access>
-            </field>
-          </fields>
-        </register>
-
         <!-- DREG_GPS_SAT_9_10 -->
         <register>
           <name>DREG_GPS_SAT_9_10</name>
