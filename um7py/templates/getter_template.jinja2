@@ -1,0 +1,21 @@
+@property
+def {{ register_name }}(self):
+    """
+{{ comment_short }}
+    Payload structure:
+{{ payload_structure_description }}
+    :return: {{ return_field_description }}
+    """
+    addr = {{ '0x{:02X}'.format(register_addr) }}
+    {% if not hidden -%}
+    ok, payload = self.read_register(addr)
+    {%- else %}
+    ok, payload = self.read_register(addr, hidden=True)
+    {%- endif %}
+    if ok:
+{{ interpreted_receive_fields }}
+        return {{ return_values }}
+    else:
+        return None
+
+

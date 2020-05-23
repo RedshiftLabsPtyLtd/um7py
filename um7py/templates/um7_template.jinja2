@@ -1,0 +1,35 @@
+#!/usr/bin/env python
+
+# Author: Dr. Konstantin Selyunin
+# License: MIT
+# Created: {{ today }}
+
+import logging
+import os.path
+import struct
+
+from um7py.rsl_serial import RslSerial
+from rsl_xml_svd.rsl_svd_parser import RslSvdParser
+
+
+class UM7(RslSerial):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.svd_parser = RslSvdParser(svd_file=UM7.find_svd('um7.svd'))
+
+    @staticmethod
+    def find_svd(svd_file_name: str):
+        parent_dir = os.path.join(os.path.dirname(__file__), os.pardir)
+        for root, dirs, files in os.walk(parent_dir):
+            if svd_file_name in files:
+                return os.path.join(root, svd_file_name)
+
+{{ generated_code_for_main_register_map }}
+{{ generated_code_for_hidden_register_map }}
+if __name__ == '__main__':
+    script_dir = os.path.dirname(__file__)
+    device_file = os.path.join(script_dir, "um7_A500CNHD.json")
+    um7 = UM7(device=device_file)
+
+

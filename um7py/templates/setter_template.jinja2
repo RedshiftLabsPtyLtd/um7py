@@ -1,0 +1,10 @@
+@{{ register_name }}.setter
+def {{ register_name }}(self, new_value):
+    addr = {{ '0x{:02X}'.format(register_addr) }}
+    {% if not hidden -%}
+    self.write_register(addr, new_value)
+    {%- else %}
+    self.write_register(addr, new_value, hidden=True)
+    {%- endif %}
+
+
