@@ -28,7 +28,8 @@ class UM7(RslSerial):
     @property
     def creg_com_settings(self):
         """
-        The CREG_COM_SETTINGS register is used to set the boards serial port baud rate and to enable (disable) the automatic transmission of sensor data and estimated states (telemetry).
+        The CREG_COM_SETTINGS register is used to set the boards serial port baud rate and to enable (disable) the
+        automatic transmission of sensor data and estimated states (telemetry).
         Payload structure:
         [31:28] : BAUD_RATE -- Sets the baud rate of the boards main serial port:
         [27:24] : GPS_BAUD -- Sets the baud rate of the UM7 auxiliary serial port:
@@ -66,7 +67,8 @@ class UM7(RslSerial):
     @property
     def creg_com_rates1(self):
         """
-        The CREG_COM_RATES1 register sets desired telemetry transmission rates in Hz for raw accelerometer, gyro, and magnetometer data. If the specified rate is 0, then no data is transmitted.
+        The CREG_COM_RATES1 register sets desired telemetry transmission rates in Hz for raw accelerometer, gyro, and
+        magnetometer data. If the specified rate is 0, then no data is transmitted.
         Payload structure:
         [31:24] : RAW_ACCEL_RATE -- Specifies the desired raw accelerometer data broadcast rate in Hz. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.
         [23:16] : RAW_GYRO_RATE -- Specifies the desired raw gyro data broadcast rate in Hz. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.
@@ -89,7 +91,8 @@ class UM7(RslSerial):
     @property
     def creg_com_rates2(self):
         """
-        The CREG_COM_RATES2 register sets desired telemetry transmission rates for all raw data and temperature. If the specified rate is 0, then no data is transmitted.
+        The CREG_COM_RATES2 register sets desired telemetry transmission rates for all raw data and temperature. If
+        the specified rate is 0, then no data is transmitted.
         Payload structure:
         [31:24] : TEMP_RATE -- Specifies the desired broadcast rate for temperature data. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.
         [7:0]   : ALL_RAW_RATE -- Specifies the desired broadcast rate for all raw sensor data. If set, this overrides the broadcast rate setting for individual raw data broadcast rates. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.
@@ -111,7 +114,8 @@ class UM7(RslSerial):
     @property
     def creg_com_rates3(self):
         """
-        The CREG_COM_RATES3 register sets desired telemetry transmission rates for processed sensor data. If the specified rate is 0, then no data is transmitted.
+        The CREG_COM_RATES3 register sets desired telemetry transmission rates for processed sensor data. If the
+        specified rate is 0, then no data is transmitted.
         Payload structure:
         [31:24] : PROC_ACCEL_RATE -- Specifies the desired broadcast rate for processed accelerometer data. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.
         [23:16] : PROC_GYRO_RATE -- Specifies the desired broadcast rate for processed rate gyro data. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.
@@ -134,7 +138,8 @@ class UM7(RslSerial):
     @property
     def creg_com_rates4(self):
         """
-        The CREG_COM_RATES4 register defines the desired telemetry transmission rates for all processed data. If the specified rate is 0, then no data is transmitted.
+        The CREG_COM_RATES4 register defines the desired telemetry transmission rates for all processed data. If the
+        specified rate is 0, then no data is transmitted.
         Payload structure:
         [7:0]   : ALL_PROC_RATE -- Specifies the desired broadcast rate for raw all processed data. If set, this overrides the broadcast rate setting for individual processed data broadcast rates. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.
         :return:  ALL_PROC_RATE as uint8_t; 
@@ -155,7 +160,8 @@ class UM7(RslSerial):
     @property
     def creg_com_rates5(self):
         """
-        The CREG_COM_RATES5 register sets desired telemetry transmission rates for quaternions, Euler Angles, position, and velocity estimates. If the specified rate is 0, then no data is transmitted.
+        The CREG_COM_RATES5 register sets desired telemetry transmission rates for quaternions, Euler Angles,
+        position, and velocity estimates. If the specified rate is 0, then no data is transmitted.
         Payload structure:
         [31:24] : QUAT_RATE -- Specifies the desired broadcast rate for quaternion data. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.
         [23:16] : EULER_RATE -- Specifies the desired broadcast rate for Euler Angle data. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.
@@ -179,7 +185,9 @@ class UM7(RslSerial):
     @property
     def creg_com_rates6(self):
         """
-        The CREG_COM_RATES6 register sets desired telemetry transmission rates for pose (Euler/position packet), health, and gyro bias estimates for the gyro 1 and gyro 2. If the specified rate is 0, then no data is transmitted.
+        The CREG_COM_RATES6 register sets desired telemetry transmission rates for pose (Euler/position packet),
+        health, and gyro bias estimates for the gyro 1 and gyro 2. If the specified rate is 0, then no data is
+        transmitted.
         Payload structure:
         [31:24] : POSE_RATE -- Specifies the desired broadcast rate for pose (Euler Angle and position) data. The data is stored as an unsigned 8-bit integer, yielding a maximum rate of 255 Hz.
         [19:16] : HEALTH_RATE -- Specifies the desired broadcast rate for the sensor health packet.
@@ -296,7 +304,8 @@ class UM7(RslSerial):
     @property
     def creg_home_north(self):
         """
-        This register sets the north home latitude in degrees, used to convert GPS coordinates to position in meters from home.
+        This register sets the north home latitude in degrees, used to convert GPS coordinates to position in meters
+        from home.
         Payload structure:
         [31:0]  : SET_HOME_NORTH -- North Position (32-bit IEEE Floating Point Value)
         :return:  SET_HOME_NORTH as float; 
@@ -317,7 +326,8 @@ class UM7(RslSerial):
     @property
     def creg_home_east(self):
         """
-        This register sets the east home longitude in degrees, used to convert GPS coordinates to position in meters from home.
+        This register sets the east home longitude in degrees, used to convert GPS coordinates to position in meters
+        from home.
         Payload structure:
         [31:0]  : SET_HOME_EAST -- East Position (32-bit IEEE Floating Point Value)
         :return:  SET_HOME_EAST as float; 
@@ -338,7 +348,8 @@ class UM7(RslSerial):
     @property
     def creg_home_up(self):
         """
-        This register sets the home altitude in meters. Used to convert GPS coordinates to position in meters from home.
+        This register sets the home altitude in meters. Used to convert GPS coordinates to position in meters from
+        home.
         Payload structure:
         [31:0]  : SET_HOME_UP -- Altitude Position (32-bit IEEE Floating Point Value)
         :return:  SET_HOME_UP as float; 
@@ -359,7 +370,8 @@ class UM7(RslSerial):
     @property
     def creg_gyro_trim_x(self):
         """
-        This register sets the x-axis rate gyro trim, which is used to add additional bias compensation for the rate gyros during calls to the ZERO_GYRO_BIAS command.
+        This register sets the x-axis rate gyro trim, which is used to add additional bias compensation for the rate
+        gyros during calls to the ZERO_GYRO_BIAS command.
         Payload structure:
         [31:0]  : GYRO_TRIM_X -- 32-bit IEEE Floating Point Value
         :return:  GYRO_TRIM_X as float; 
@@ -380,7 +392,8 @@ class UM7(RslSerial):
     @property
     def creg_gyro_trim_y(self):
         """
-        This register sets the y-axis rate gyro trim, which is used to add additional bias compensation for the rate gyros during calls to the ZERO_GYRO_BIAS command.
+        This register sets the y-axis rate gyro trim, which is used to add additional bias compensation for the rate
+        gyros during calls to the ZERO_GYRO_BIAS command.
         Payload structure:
         [31:0]  : GYRO_TRIM_Y -- 32-bit IEEE Floating Point Value
         :return:  GYRO_TRIM_Y as float; 
@@ -401,7 +414,8 @@ class UM7(RslSerial):
     @property
     def creg_gyro_trim_z(self):
         """
-        This register sets the z-axis rate gyro trim, which is used to add additional bias compensation for the rate gyros during calls to the ZERO_GYRO_BIAS command.
+        This register sets the z-axis rate gyro trim, which is used to add additional bias compensation for the rate
+        gyros during calls to the ZERO_GYRO_BIAS command.
         Payload structure:
         [31:0]  : GYRO_TRIM_Z -- 32-bit IEEE Floating Point Value
         :return:  GYRO_TRIM_Z as float; 
@@ -611,7 +625,8 @@ class UM7(RslSerial):
     @property
     def creg_mag_bias_x(self):
         """
-        This register stores a bias term for the magnetometer x-axis for hard-iron calibration. This term can be computed by performing magnetometer calibration with the Redshift labs Serial Interface.
+        This register stores a bias term for the magnetometer x-axis for hard-iron calibration. This term can be
+        computed by performing magnetometer calibration with the Redshift labs Serial Interface.
         Payload structure:
         [31:0]  : MAG_BIAS_X -- 32-bit IEEE Floating Point Value
         :return:  MAG_BIAS_X as float; 
@@ -632,7 +647,8 @@ class UM7(RslSerial):
     @property
     def creg_mag_1_bias_y(self):
         """
-        This register stores a bias term for the magnetometer y-axis for hard-iron calibration. This term can be computed by performing magnetometer calibration with the Redshift labs Serial Interface.
+        This register stores a bias term for the magnetometer y-axis for hard-iron calibration. This term can be
+        computed by performing magnetometer calibration with the Redshift labs Serial Interface.
         Payload structure:
         [31:0]  : MAG_BIAS_Y -- 32-bit IEEE Floating Point Value
         :return:  MAG_BIAS_Y as float; 
@@ -653,7 +669,8 @@ class UM7(RslSerial):
     @property
     def creg_mag_bias_z(self):
         """
-        This register stores a bias term for the magnetometer z-axis for hard-iron calibration. This term can be computed by performing magnetometer calibration with the Redshift labs Serial Interface.
+        This register stores a bias term for the magnetometer z-axis for hard-iron calibration. This term can be
+        computed by performing magnetometer calibration with the Redshift labs Serial Interface.
         Payload structure:
         [31:0]  : MAG_BIAS_Z -- 32-bit IEEE Floating Point Value
         :return:  MAG_BIAS_Z as float; 
@@ -863,7 +880,8 @@ class UM7(RslSerial):
     @property
     def creg_accel_bias_x(self):
         """
-        This register stores a bias term for the accelerometer x-axis for bias calibration. This term can be computed by performing calibrate accelerometers command within the Redshift labs Serial Interface.
+        This register stores a bias term for the accelerometer x-axis for bias calibration. This term can be computed
+        by performing calibrate accelerometers command within the Redshift labs Serial Interface.
         Payload structure:
         [31:0]  : ACCEL_BIAS_X -- 32-bit IEEE Floating Point Value
         :return:  ACCEL_BIAS_X as float; 
@@ -884,7 +902,8 @@ class UM7(RslSerial):
     @property
     def creg_accel_bias_y(self):
         """
-        This register stores a bias term for the accelerometer y-axis for bias calibration. This term can be computed by performing calibrate accelerometers command within the Redshift labs Serial Interface.
+        This register stores a bias term for the accelerometer y-axis for bias calibration. This term can be computed
+        by performing calibrate accelerometers command within the Redshift labs Serial Interface.
         Payload structure:
         [31:0]  : ACCEL_BIAS_Y -- 32-bit IEEE Floating Point Value
         :return:  ACCEL_BIAS_Y as float; 
@@ -905,7 +924,8 @@ class UM7(RslSerial):
     @property
     def creg_accel_bias_z(self):
         """
-        This register stores a bias term for the accelerometer z-axis for bias calibration. This term can be computed by performing calibrate accelerometers command within the Redshift labs Serial Interface.
+        This register stores a bias term for the accelerometer z-axis for bias calibration. This term can be computed
+        by performing calibrate accelerometers command within the Redshift labs Serial Interface.
         Payload structure:
         [31:0]  : ACCEL_BIAS_Z -- 32-bit IEEE Floating Point Value
         :return:  ACCEL_BIAS_Z as float; 
@@ -926,7 +946,9 @@ class UM7(RslSerial):
     @property
     def dreg_health(self):
         """
-        The health register reports the current status of the GPS module and the other sensors on the board. Monitoring the health register is the easiest way to monitor the quality of the GPS lock and to watch for other problems that could affect the behavior of the board.
+        The health register reports the current status of the GPS module and the other sensors on the board.
+        Monitoring the health register is the easiest way to monitor the quality of the GPS lock and to watch for
+        other problems that could affect the behavior of the board.
         Payload structure:
         [31:26] : SATS_USED -- Reports the number of satellites used in the position solution.
         [25:16] : HDOP -- Reports the horizontal dilution of precision (HDOP) reported by the GPS. The actual HDOP value is equal to the contents of the HDOP bits divided by 10.
@@ -1162,7 +1184,8 @@ class UM7(RslSerial):
     @property
     def dreg_gyro_proc_x(self):
         """
-        Contains the actual measured angular rate from the gyro for the x axis in degrees/sec after calibration has been applied.
+        Contains the actual measured angular rate from the gyro for the x axis in degrees/sec after calibration has
+        been applied.
         Payload structure:
         [31:0]  : GYRO_PROC_X -- Gyro X in degrees / sec (32-bit IEEE Floating Point Value)
         :return:  GYRO_PROC_X as float; 
@@ -1178,7 +1201,8 @@ class UM7(RslSerial):
     @property
     def dreg_gyro_proc_y(self):
         """
-        Contains the actual measured angular rate from the gyro for the y axis in degrees/sec after calibration has been applied.
+        Contains the actual measured angular rate from the gyro for the y axis in degrees/sec after calibration has
+        been applied.
         Payload structure:
         [31:0]  : GYRO_PROC_Y -- Gyro Y in degrees / sec (32-bit IEEE Floating Point Value)
         :return:  GYRO_PROC_Y as float; 
@@ -1194,7 +1218,8 @@ class UM7(RslSerial):
     @property
     def dreg_gyro_proc_z(self):
         """
-        Contains the actual measured angular rate from the gyro for the z axis in degrees/sec after calibration has been applied.
+        Contains the actual measured angular rate from the gyro for the z axis in degrees/sec after calibration has
+        been applied.
         Payload structure:
         [31:0]  : GYRO_PROC_Z -- Gyro Z in degrees / sec (32-bit IEEE Floating Point Value)
         :return:  GYRO_PROC_Z as float; 
@@ -1226,7 +1251,8 @@ class UM7(RslSerial):
     @property
     def dreg_accel_proc_x(self):
         """
-        Contains the actual measured acceleration from the accelerometer for the x axis in m/s2 after calibration has been applied.
+        Contains the actual measured acceleration from the accelerometer for the x axis in m/s2 after calibration has
+        been applied.
         Payload structure:
         [31:0]  : ACCEL_PROC_X -- Acceleration X in m/s2 (32-bit IEEE Floating Point Value)
         :return:  ACCEL_PROC_X as float; 
@@ -1242,7 +1268,8 @@ class UM7(RslSerial):
     @property
     def dreg_accel_proc_y(self):
         """
-        Contains the actual measured acceleration from the accelerometer for the y axis in m/s2 after calibration has been applied.
+        Contains the actual measured acceleration from the accelerometer for the y axis in m/s2 after calibration has
+        been applied.
         Payload structure:
         [31:0]  : ACCEL_PROC_Y -- Acceleration Y in m/s2 (32-bit IEEE Floating Point Value)
         :return:  ACCEL_PROC_Y as float; 
@@ -1258,7 +1285,8 @@ class UM7(RslSerial):
     @property
     def dreg_accel_proc_z(self):
         """
-        Contains the actual measured acceleration from the accelerometer for the z axis in m/s2 after calibration has been applied.
+        Contains the actual measured acceleration from the accelerometer for the z axis in m/s2 after calibration has
+        been applied.
         Payload structure:
         [31:0]  : ACCEL_PROC_Z -- Acceleration Z in m/s2 (32-bit IEEE Floating Point Value)
         :return:  ACCEL_PROC_Z as float; 
@@ -1290,7 +1318,8 @@ class UM7(RslSerial):
     @property
     def dreg_mag_proc_x(self):
         """
-        Contains the actual measured magnetic field from the magnetometer for the x axis after calibration has been applied.
+        Contains the actual measured magnetic field from the magnetometer for the x axis after calibration has been
+        applied.
         Payload structure:
         [31:0]  : MAG_PROC_X -- Magnetometer X (32-bit IEEE Floating Point Value)
         :return:  MAG_PROC_X as float; 
@@ -1306,7 +1335,8 @@ class UM7(RslSerial):
     @property
     def dreg_mag_proc_y(self):
         """
-        Contains the actual measured magnetic field from the magnetometer for the y axis after calibration has been applied.
+        Contains the actual measured magnetic field from the magnetometer for the y axis after calibration has been
+        applied.
         Payload structure:
         [31:0]  : MAG_PROC_Y -- Magnetometer Y (32-bit IEEE Floating Point Value)
         :return:  MAG_PROC_Y as float; 
@@ -1322,7 +1352,8 @@ class UM7(RslSerial):
     @property
     def dreg_mag_proc_z(self):
         """
-        Contains the actual measured magnetic field from the magnetometer for the z axis after calibration has been applied.
+        Contains the actual measured magnetic field from the magnetometer for the z axis after calibration has been
+        applied.
         Payload structure:
         [31:0]  : MAG_PROC_Z -- Magnetometer Z (32-bit IEEE Floating Point Value)
         :return:  MAG_PROC_Z as float; 
@@ -1872,7 +1903,8 @@ class UM7(RslSerial):
     @property
     def get_fw_revision(self):
         """
-        Firmware build identification string: a four byte ASCII character sequence which corresponds to a firmware series.
+        Firmware build identification string: a four byte ASCII character sequence which corresponds to a firmware
+        series.
         Payload structure:
         [31:0]  : FW_REVISION -- Firmware revision string
         :return:  FW_REVISION as string; 

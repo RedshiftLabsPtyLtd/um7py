@@ -31,7 +31,7 @@ class RslGenerator(RslSvdParser):
             indent_spaces = 8 - len(field_description)
             field_description += " " * indent_spaces + f": {field.name} -- {field.description}\n"
             payload_description += field_description
-        return textwrap.indent(payload_description[:-1], ' ' * 4)
+        return payload_description[:-1]
 
     @staticmethod
     def render_template_to_str(template_file: str, params_dict: dict):
@@ -149,8 +149,8 @@ class RslGenerator(RslSvdParser):
         return_vars, generated_code = self.interpret_payload(register)
         params_dict = {
             'register_name': register.name.lower(),
-            'comment_short': textwrap.indent(register.description, ' ' * 4),
-            'payload_structure_description': self.retrieve_payload_description(register),
+            'comment_short': textwrap.indent("\n".join(textwrap.wrap(register.description, 110)), ' ' * 4),
+            'payload_structure_description': textwrap.indent(self.retrieve_payload_description(register), ' ' * 4),
             'return_field_description': self.retrieve_return_description(register),
             'register_addr': register.address,
             'hidden': is_hidden,
