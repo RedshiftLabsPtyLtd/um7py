@@ -9,7 +9,7 @@ def {{ register_name }}(self):
     addr = {{ '0x{:02X}'.format(register_addr) }}
     {% if not hidden -%}
     ok, payload = self.read_register(addr)
-    {%- else %}
+    {%- else -%}
     ok, payload = self.read_register(addr, hidden=True)
     {%- endif %}
     if ok:

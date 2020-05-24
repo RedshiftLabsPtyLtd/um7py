@@ -2,7 +2,7 @@
 
 # Author: Dr. Konstantin Selyunin
 # License: MIT
-# Created: 2020.05.23
+# Created: 2020.05.24
 
 import logging
 import os.path
@@ -1958,7 +1958,6 @@ class UM7(RslSerial):
         :return:  GYRO_VARIANCE as float; 
         """
         addr = 0x00
-    
         ok, payload = self.read_register(addr, hidden=True)
         if ok:
             gyro_variance = struct.unpack('>f', payload[0:4])
@@ -1969,7 +1968,6 @@ class UM7(RslSerial):
     @hidden_gyro_variance.setter
     def hidden_gyro_variance(self, new_value):
         addr = 0x00
-    
         self.write_register(addr, new_value, hidden=True)
 
     @property
@@ -1981,7 +1979,6 @@ class UM7(RslSerial):
         :return:  ACCEL_VARIANCE as float; 
         """
         addr = 0x01
-    
         ok, payload = self.read_register(addr, hidden=True)
         if ok:
             accel_variance = struct.unpack('>f', payload[0:4])
@@ -1992,7 +1989,6 @@ class UM7(RslSerial):
     @hidden_accel_variance.setter
     def hidden_accel_variance(self, new_value):
         addr = 0x01
-    
         self.write_register(addr, new_value, hidden=True)
 
 
