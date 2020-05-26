@@ -25,5 +25,5 @@ if __name__ == '__main__':
     }
     um7_template = os.path.join(os.path.dirname(__file__), 'templates/um7_template.jinja2')
     gen_code = RslGenerator.render_template_to_str(um7_template, params_dict)
-    with open('um7.py', 'w') as fd:
+    with open('um7_registers.py', 'w') as fd:
         fd.write(gen_code)

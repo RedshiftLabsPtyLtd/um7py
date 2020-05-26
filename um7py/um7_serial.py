@@ -15,11 +15,19 @@ import sys
 from time import monotonic
 from typing import Tuple, List, Dict, Any, Union
 
-from um7py.rsl_comm import RslComm, RslException
+from um7py.um7_registers import UM7Registers
 
 
-class RslSerial(RslComm):
+class RslException(Exception):
+    """
+    RSL Exception class for recording RedShiftLabs and/or UM7 specific errors
+    """
+    pass
+
+
+class UM7Serial(UM7Registers):
     def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.device_file = kwargs.get('device')
         self.device_dict = None
         self.port = serial.Serial()

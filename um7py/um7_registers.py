@@ -2,21 +2,23 @@
 
 # Author: Dr. Konstantin Selyunin
 # License: MIT
-# Created: 2020.05.24
+# Created: 2020.05.26
 
 import logging
 import os.path
 import struct
 
-from um7py.rsl_serial import RslSerial
+from abc import abstractmethod, ABC
+from typing import Union, Tuple
+
 from rsl_xml_svd.rsl_svd_parser import RslSvdParser
 
 
-class UM7(RslSerial):
+class UM7Registers(ABC):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.svd_parser = RslSvdParser(svd_file=UM7.find_svd('um7.svd'))
+        self.svd_parser = RslSvdParser(svd_file=UM7Regs.find_svd('um7.svd'))
 
     @staticmethod
     def find_svd(svd_file_name: str):
@@ -24,6 +26,19 @@ class UM7(RslSerial):
         for root, dirs, files in os.walk(parent_dir):
             if svd_file_name in files:
                 return os.path.join(root, svd_file_name)
+
+    @abstractmethod
+    def connect(self, *args, **kwargs):
+        pass
+
+    @abstractmethod
+    def read_register(self, reg_addr: int, **kw) -> bytes:
+        pass
+
+    @abstractmethod
+    def write_register(self, reg_addr: int, reg_value: Union[int, bytes, float], **kw):
+        pass
+
 
     @property
     def creg_com_settings(self):
@@ -2025,7 +2040,4 @@ class UM7(RslSerial):
 
 
 if __name__ == '__main__':
-    script_dir = os.path.dirname(__file__)
-    device_file = os.path.join(script_dir, "um7_A500CNHD.json")
-    um7 = UM7(device=device_file)
-
+    pass
