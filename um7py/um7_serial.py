@@ -316,3 +316,6 @@ class UM7Serial(UM7Registers):
         return gyro_bias_x, gyro_bias_y, gyro_bias_z
 
 
+if __name__ == '__main__':
+    pass
+    um7 = UM7Serial()
