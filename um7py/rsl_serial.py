@@ -91,38 +91,38 @@ class RslSerial(RslComm):
             else:
                 return False
 
-    def __get_preamble(self):
+    def get_preamble(self):
         preamble = bytes('snp', encoding='ascii')
         return preamble
 
-    def __compute_checksum(self, partial_packet: bytes) -> bytes:
+    def compute_checksum(self, partial_packet: bytes) -> bytes:
         checksum = 0
         for byte in partial_packet:
             checksum += byte
         checksum_bytes = int.to_bytes(checksum, length=2, byteorder='big', signed=False)
         return checksum_bytes
 
-    def __construct_packet_type(self, has_data: bool = False, data_length: int = 0,
-                                hidden: bool = False, command_failed: bool = False) -> int:
-        if data_length > 31:
-            raise RslException(f"Batch size for command should not exceed 16, but got {data_length}")
-        packet_type = has_data << 7 | data_length << 2 | hidden << 1 | command_failed
+    def construct_packet_type(self, has_data: bool = False, is_batch: bool = False, data_length: int = 0,
+                              hidden: bool = False, command_failed: bool = False) -> int:
+        if data_length > 15:
+            raise RslException(f"Batch size for command should not exceed 15, but got {data_length}")
+        packet_type = has_data << 7 | is_batch << 6 | data_length << 2 | hidden << 1 | command_failed
         return packet_type
 
-    def __get_packet_type(self, extracted_packet_type: int) -> Tuple[bool, bool, int, bool, bool]:
-        has_data = bool(extracted_packet_type >> 7 & 1)
-        is_batch = bool(extracted_packet_type >> 6 & 1)
+    def get_packet_type(self, extracted_packet_type: int) -> Tuple[bool, bool, int, bool, bool]:
+        has_data = bool(extracted_packet_type >> 7 & 0x01)
+        is_batch = bool(extracted_packet_type >> 6 & 0x01)
         batch_length = extracted_packet_type >> 2 & 0x0F
-        hidden = bool(extracted_packet_type >> 1 & 1)
-        command_failed = bool(extracted_packet_type & 1)
+        hidden = bool(extracted_packet_type >> 1 & 0x01)
+        command_failed = bool(extracted_packet_type & 0x01)
         return has_data, is_batch, batch_length, hidden, command_failed
 
-    def __construct_packet(self, packet_type: int, address: int, payload: bytes = bytes()) -> bytes:
-        preamble = self.__get_preamble()
+    def construct_packet(self, packet_type: int, address: int, payload: bytes = bytes()) -> bytes:
+        preamble = self.get_preamble()
         packet_type_byte = int.to_bytes(packet_type, length=1, byteorder='big')
         address_byte = int.to_bytes(address, length=1, byteorder='big')
         partial_packet = preamble + packet_type_byte + address_byte + payload
-        checksum = self.__compute_checksum(partial_packet)
+        checksum = self.compute_checksum(partial_packet)
         packet = partial_packet + checksum
         return packet
 
@@ -144,7 +144,7 @@ class RslSerial(RslComm):
             ok = len(self.buffer) > 0
         return True, self.buffer
 
-    def __send_recv(self, packet: bytes) -> bytes:
+    def send_recv(self, packet: bytes) -> bytes:
         send_ok = self.send(packet)
         if not send_ok:
             raise RslException("Sending packet failed!")
@@ -154,7 +154,7 @@ class RslSerial(RslComm):
         return self.buffer
 
     def find_packet(self, sensor_response: bytes) -> Tuple[bytes, bytes]:
-        preamble = self.__get_preamble()
+        preamble = self.get_preamble()
         packet_start_idx = sensor_response.find(preamble)
 
         if packet_start_idx == -1:
@@ -173,7 +173,7 @@ class RslSerial(RslComm):
         remainder = sensor_response[next_packet_start_idx:]
         return packet, remainder
 
-    def __find_response(self, reg_addr: int, hidden: bool = False) -> Tuple[bool, bytes]:
+    def find_response(self, reg_addr: int, hidden: bool = False) -> Tuple[bool, bytes]:
         while len(self.buffer) > 0:
             packet, self.buffer = self.find_packet(self.buffer)
             if len(packet) < 4:
@@ -204,8 +204,10 @@ class RslSerial(RslComm):
 
     def check_packet(self, packet: bytes) -> bool:
         packet_type = packet[3]
-        has_data = bool(packet_type & (1 << 7))
-        data_len = (packet_type >> 2) & 0x1F
+        has_data = bool((packet_type >> 7) & 0x01)
+        is_batch = bool((packet_type >> 6) & 0x01)
+        data_len = (packet_type >> 2) & 0x0F
+        hidden = bool((packet_type >> 1) & 0x01)
         error = packet_type & 0x01
         if error:
             logging.error(f"Error bit set for packet: {packet}!")
@@ -224,12 +226,12 @@ class RslSerial(RslComm):
             return True
 
     def read_register(self, reg_addr: int, hidden: bool = False) -> Tuple[bool, bytes]:
-        packet_type = self.__construct_packet_type(hidden=hidden)
-        packet_to_send = self.__construct_packet(packet_type, reg_addr)
+        packet_type = self.construct_packet_type(hidden=hidden)
+        packet_to_send = self.construct_packet(packet_type, reg_addr)
         logging.debug(f"packet sent: {packet_to_send}")
-        self.__send_recv(packet_to_send)
+        self.send_recv(packet_to_send)
         t = monotonic()
-        ok, sensor_reply = self.__find_response(reg_addr, hidden)
+        ok, sensor_reply = self.find_response(reg_addr, hidden)
         if ok:
             logging.debug(f"packet: {sensor_reply}")
             self.check_packet(sensor_reply)
@@ -238,8 +240,8 @@ class RslSerial(RslComm):
         else:
             while monotonic() - t < 0.15:
                 # try to send <-> receive packets for a pre-defined time out time
-                self.__send_recv(packet_to_send)
-                ok, sensor_reply = self.__find_response(reg_addr, hidden)
+                self.send_recv(packet_to_send)
+                ok, sensor_reply = self.find_response(reg_addr, hidden)
                 if ok:
                     logging.debug(f"packet: {sensor_reply}")
                     self.check_packet(sensor_reply)
@@ -248,17 +250,17 @@ class RslSerial(RslComm):
             return False, bytes()
 
     def write_register(self, reg_addr: int, reg_value: Union[int, bytes, float], hidden: bool = False) -> bool:
-        packet_type = self.__construct_packet_type(has_data=True, hidden=hidden)
+        packet_type = self.construct_packet_type(has_data=True, hidden=hidden)
         if type(reg_value) == int:
             payload = int.to_bytes(reg_value, byteorder='big', length=4)
         elif type(reg_value) == bytes:
             payload = reg_value
         elif type(reg_value) == float:
             payload = struct.pack('>f', reg_value)
-        packet_to_send = self.__construct_packet(packet_type, reg_addr, payload)
+        packet_to_send = self.construct_packet(packet_type, reg_addr, payload)
         logging.debug(f"packet sent: {packet_to_send}")
-        self.__send_recv(packet_to_send)
-        ok, sensor_reply = self.__find_response(reg_addr)
+        self.send_recv(packet_to_send)
+        ok, sensor_reply = self.find_response(reg_addr)
         if ok:
             logging.debug(f"packet: {sensor_reply}")
             self.check_packet(sensor_reply)
