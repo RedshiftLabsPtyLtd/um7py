@@ -6,9 +6,9 @@ from um7py.rsl_generator import RslGenerator
 
 @pytest.fixture
 def rsl_generator() -> RslGenerator:
-    svd_file = './rsl_xml_svd/um7.svd'
-    svd_hidden_regs_file = './rsl_xml_svd/shearwater_hidden.svd'
-    return RslGenerator(svd_file=svd_file, svd_hidden_regs_file=svd_hidden_regs_file)
+    test_script_path = os.path.dirname(__file__)
+    svd_file = os.path.join(test_script_path, os.pardir, os.pardir, './um7py/rsl_xml_svd/um7.svd')
+    return RslGenerator(svd_file=svd_file)
 
 
 @pytest.mark.gen

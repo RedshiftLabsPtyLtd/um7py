@@ -3,17 +3,15 @@
 # Author: Dr. Konstantin Selyunin
 # License: MIT
 
-import logging
 import os
 import os.path
-import struct
 import textwrap
 
-from typing import Any, List, Tuple
+from typing import Tuple
 
 from jinja2 import Environment, DictLoader
 
-from rsl_xml_svd.rsl_svd_parser import Register, RslSvdParser
+from um7py.rsl_xml_svd.rsl_svd_parser import Register, RslSvdParser
 
 
 class RslGenerator(RslSvdParser):

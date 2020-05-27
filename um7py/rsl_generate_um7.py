@@ -13,7 +13,7 @@ from datetime import datetime
 
 if __name__ == '__main__':
     script_folder = os.path.dirname(__file__)
-    svd_file = os.path.join(script_folder, os.pardir, './rsl_xml_svd/um7.svd')
+    svd_file = os.path.join(script_folder, os.pardir, './um7py/rsl_xml_svd/um7.svd')
     rsl_svd_generator = RslGenerator(svd_file=svd_file)
     um7_main_registers = indent(rsl_svd_generator.generate_props_for_main_register_map(), ' ' * 4)
     um7_hidden_registers = indent(rsl_svd_generator.generate_props_for_hidden_registers(), ' ' * 4)
