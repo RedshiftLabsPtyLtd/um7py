@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # Author: Dr. Konstantin Selyunin
-# Date: 26 May 2020
 # License: MIT
 
 from shutil import copy

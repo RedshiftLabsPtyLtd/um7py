@@ -58,7 +58,7 @@ class UM7AllProcPacket:
                f"accel=[{self.accel_proc_x:>+8.3f}, {self.accel_proc_y:>+8.3f}, {self.accel_proc_z:>+8.3f}], " \
                f"accel_t={self.accel_proc_time:>6.3f}; " \
                f"mag=[{self.mag_proc_x:>+8.6f}, {self.mag_proc_y:>+8.6f}, {self.mag_proc_z:>+8.6f}], " \
-               f"mag_t={self.mag_proc_time:>6.3f})" \
+               f"mag_t={self.mag_proc_time:>6.3f})"
 
 
 @dataclass
