@@ -7,7 +7,7 @@ import os.path
 from typing import Tuple
 
 import pytest
-from rsl_xml_svd.rsl_svd_parser import RslSvdParser, Register, Field, EnumeratedValue
+from um7py.rsl_xml_svd.rsl_svd_parser import RslSvdParser, Register, Field, EnumeratedValue
 
 
 @pytest.fixture
