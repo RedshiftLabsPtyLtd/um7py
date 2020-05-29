@@ -13,8 +13,11 @@ import struct
 import sys
 
 from time import monotonic
-from typing import Tuple, List, Dict, Any, Union
+from typing import Tuple, List, Dict, Any, Union, Callable
 
+from um7py.um7_broadcast_packets import UM7AllRawPacket, UM7HealthPacket, UM7GyroBiasPacket, UM7ProcMagPacket, \
+    UM7ProcGyroPacket, UM7ProcAccelPacket, UM7RawMagPacket, UM7RawGyroPacket, UM7RawAccelPacket, UM7QuaternionPacket, \
+    UM7EulerPacket, UM7AllProcPacket
 from um7py.um7_registers import UM7Registers
 
 
@@ -34,7 +37,7 @@ class UM7Serial(UM7Registers):
         self.port_name = None
         self.port_config = None
         self.buffer = bytes()
-        self.buffer_size = 512
+        self.buffer_size = 125
         self.firmware_version = None
         self.uid_32_bit = None
         if kwargs.get('port_name') is not None:
@@ -275,45 +278,282 @@ class UM7Serial(UM7Registers):
             ok, payload = self.get_payload(sensor_reply)
             return ok
 
-    def decode_raw_gyro_packet(self, packet):
-        payload = packet[5:-2]
-        assert len(payload) == 44, "Invalid payload length for raw gyro packet"
-        gyro_raw_x, gyro_raw_y, gyro_raw_z = struct.unpack('>hhh2x', payload[0:8])
-        gyro_raw_time = struct.unpack('>f', payload[8:12])[0]
-        accel_raw_x, accel_raw_y, accel_raw_z = struct.unpack('>hhh2x', payload[12:20])
-        accel_raw_time = struct.unpack('>f', payload[20:24])[0]
-        mag_raw_x, mag_raw_y, mag_raw_z = struct.unpack('>hhh2x', payload[24:32])
-        mag_raw_time = struct.unpack('>f', payload[32:36])[0]
-        temperature, temperature_time = struct.unpack('>ff', payload[36:44])
-        return gyro_raw_x, gyro_raw_y, gyro_raw_z, \
-               gyro_raw_time, \
-               accel_raw_x, accel_raw_y, accel_raw_z, \
-               accel_raw_time, \
-               mag_raw_x, mag_raw_y, mag_raw_z, \
-               mag_raw_time, \
-               temperature, temperature_time
+    def recv_broadcast_packet(self, packet_target_addr: int, expected_packet_length: int,
+                              decode_callback: Callable, num_packets: int = -1):
+        received_packets = 0
+        while num_packets == -1 or received_packets < num_packets:
+            ok, _ = self.recv()
+            while len(self.buffer) > 0:
+                packet, self.buffer = self.find_packet(self.buffer)
+                # logging.info(f"buffer length: {len(self.buffer)}")
+                if len(packet) > 7:
+                    recv_packet_addr = packet[4]
+                    if recv_packet_addr == packet_target_addr:
+                        packet_correct_length = len(packet) == expected_packet_length
+                        if not packet_correct_length:
+                            logging.error(f"Invalid packet length for addr: {packet_target_addr}, "
+                                          f"expected: {expected_packet_length}, got: {len(packet)}, packet: {packet}")
+                        checksum_ok = self.verify_checksum(packet)
+                        if not checksum_ok:
+                            logging.error(f"Checksum failed for broadcast packet with addr: {packet_target_addr}")
+                        packet_type_check_ok = self.check_packet(packet)
+                        if not packet_type_check_ok:
+                            logging.error(f"Checking packet type failed for broadcast with addr: {packet_target_addr}!")
+                        if packet_correct_length and checksum_ok and packet_type_check_ok:
+                            yield decode_callback(packet)
+                            received_packets += 1
 
-    def decode_proc_gyro_packet(self, packet):
-        payload = packet[5:-2]
-        assert len(payload) == 48, f"Invalid payload length for proc gyro packet, got {len(payload)},\n{payload}"
-        gyro_proc_x, gyro_proc_y, gyro_proc_z = struct.unpack('>fff', payload[0:12])
-        gyro_proc_time = struct.unpack('>f', payload[12:16])[0]
-        acc_proc_x, acc_proc_y, acc_proc_z = struct.unpack('>fff', payload[16:28])
-        acc_proc_time = struct.unpack('>f', payload[28:32])[0]
-        mag_proc_x, mag_proc_y, mag_proc_z = struct.unpack('>fff', payload[32:44])
-        mag_proc_time = struct.unpack('>f', payload[44:48])[0]
-        return gyro_proc_x, gyro_proc_y, gyro_proc_z,\
-               gyro_proc_time,\
-               acc_proc_x, acc_proc_y, acc_proc_z,\
-               acc_proc_time,\
-               mag_proc_x, mag_proc_y, mag_proc_z,\
-               mag_proc_time
+    def recv_all_raw_broadcast(self, num_packets: int = -1):
+        all_raw_start_addr = self.svd_parser.find_register_by(name='DREG_GYRO_RAW_XY').address
+        broadcast_packet_length = 51
+        return self.recv_broadcast_packet(all_raw_start_addr, broadcast_packet_length,
+                                          self.decode_all_raw_broadcast, num_packets)
 
-    def decode_gyro_bias_packet(self, packet):
+    def recv_all_proc_broadcast(self, num_packets: int = -1):
+        all_proc_start_addr = self.svd_parser.find_register_by(name='DREG_GYRO_PROC_X').address
+        broadcast_packet_length = 55
+        return self.recv_broadcast_packet(all_proc_start_addr, broadcast_packet_length,
+                                          self.decode_all_proc_broadcast, num_packets)
+
+    def recv_euler_broadcast(self, num_packets: int = -1):
+        euler_start_addr = self.svd_parser.find_register_by(name='DREG_EULER_PHI_THETA').address
+        broadcast_packet_length = 27
+        return self.recv_broadcast_packet(euler_start_addr, broadcast_packet_length,
+                                          self.decode_euler_broadcast, num_packets)
+
+    def recv_quaternion_broadcast(self, num_packets: int = -1):
+        quat_start_addr = self.svd_parser.find_register_by(name='DREG_QUAT_AB').address
+        broadcast_packet_length = 19
+        return self.recv_broadcast_packet(quat_start_addr, broadcast_packet_length,
+                                          self.decode_quaternion_broadcast, num_packets)
+
+    def recv_health_broadcast(self, num_packets: int = -1):
+        health_start_addr = self.svd_parser.find_register_by(name='DREG_HEALTH').address
+        broadcast_packet_length = 11
+        return self.recv_broadcast_packet(health_start_addr, broadcast_packet_length,
+                                          self.decode_health_broadcast, num_packets)
+
+    def recv_raw_accel_broadcast(self, num_packets: int = -1):
+        raw_accel_1_addr = self.svd_parser.find_register_by(name='DREG_ACCEL_RAW_XY').address
+        broadcast_packet_length = 19
+        return self.recv_broadcast_packet(raw_accel_1_addr, broadcast_packet_length,
+                                          self.decode_raw_accel_broadcast, num_packets)
+
+    def recv_raw_gyro_broadcast(self, num_packets: int = -1):
+        raw_gyro_1_addr = self.svd_parser.find_register_by(name='DREG_GYRO_RAW_XY').address
+        broadcast_packet_length = 19
+        return self.recv_broadcast_packet(raw_gyro_1_addr, broadcast_packet_length,
+                                          self.decode_raw_gyro_broadcast, num_packets)
+
+    def recv_raw_mag_broadcast(self, num_packets: int = -1):
+        raw_mag_1_addr = self.svd_parser.find_register_by(name='DREG_MAG_RAW_XY').address
+        broadcast_packet_length = 19
+        return self.recv_broadcast_packet(raw_mag_1_addr, broadcast_packet_length,
+                                          self.decode_raw_mag_broadcast, num_packets)
+
+    def recv_proc_accel_broadcast(self, num_packets: int = -1):
+        proc_accel_1_addr = self.svd_parser.find_register_by(name='DREG_ACCEL_PROC_X').address
+        broadcast_packet_length = 23
+        return self.recv_broadcast_packet(proc_accel_1_addr, broadcast_packet_length,
+                                          self.decode_proc_accel_broadcast, num_packets)
+
+    def recv_proc_gyro_broadcast(self, num_packets: int = -1):
+        proc_gyro_1_addr = self.svd_parser.find_register_by(name='DREG_GYRO_PROC_X').address
+        broadcast_packet_length = 23
+        return self.recv_broadcast_packet(proc_gyro_1_addr, broadcast_packet_length,
+                                          self.decode_proc_gyro_broadcast, num_packets)
+
+    def recv_proc_mag_broadcast(self, num_packets: int = -1):
+        proc_mag_1_addr = self.svd_parser.find_register_by(name='DREG_MAG_PROC_X').address
+        broadcast_packet_length = 23
+        return self.recv_broadcast_packet(proc_mag_1_addr, broadcast_packet_length,
+                                          self.decode_proc_mag_broadcast, num_packets)
+
+    def recv_broadcast(self,  num_packets: int = -1):
+        received_packets = 0
+        while num_packets == -1 or received_packets < num_packets:
+            ok, _ = self.recv()
+            while len(self.buffer) > 0:
+                packet, self.buffer = self.find_packet(self.buffer)
+                if len(packet) > 7:
+                    packet_addr = packet[4]
+                    start_reg = self.svd_parser.find_register_by(address=packet_addr)
+                    checksum_ok = self.verify_checksum(packet)
+                    if not checksum_ok:
+                        logging.error(f"Checksum failed for broadcast packet with start_reg: {start_reg}")
+                    packet_type_check_ok = self.check_packet(packet)
+                    if not packet_type_check_ok:
+                        logging.error(f"Checking packet type failed for broadcast with start_reg: {start_reg}!")
+                    health_start_addr = self.svd_parser.find_register_by(name='DREG_HEALTH').address
+                    euler_start_addr = self.svd_parser.find_register_by(name='DREG_EULER_PHI_THETA').address
+                    all_proc_start_addr = self.svd_parser.find_register_by(name='DREG_GYRO_PROC_X').address
+                    accel_proc_start_addr = self.svd_parser.find_register_by(name='DREG_ACCEL_PROC_X').address
+                    mag_proc_start_addr = self.svd_parser.find_register_by(name='DREG_MAG_PROC_X').address
+                    all_raw_start_addr = self.svd_parser.find_register_by(name='DREG_GYRO_RAW_XY').address
+                    accel_raw_start_addr = self.svd_parser.find_register_by(name='DREG_ACCEL_RAW_XY').address
+                    mag_raw_start_addr = self.svd_parser.find_register_by(name='DREG_MAG_RAW_X').address
+                    gyro_bias_start_addr = self.svd_parser.find_register_by(name='DREG_GYRO_BIAS_X').address
+                    quat_addr = self.svd_parser.find_register_by(name='DREG_QUAT_AB').address
+
+                    if packet_addr == health_start_addr:
+                        if len(packet) == 11:
+                            logging.info(f"[HEALTH]: broadcast packet found!")
+                            yield self.decode_health_broadcast(packet)
+                            received_packets += 1
+                        else:
+                            logging.error(f"[HEALTH]: invalid packet length, got {len(packet)}, packet: {packet}!")
+                    elif packet_addr == euler_start_addr:
+                        if len(packet) == 27:
+                            logging.info(f"[EULER]: broadcast packet found!")
+                            yield self.decode_euler_broadcast(packet)
+                            received_packets += 1
+                        else:
+                            logging.error(f"[EULER]: invalid packet length, got {len(packet)}, packet: {packet}!")
+                    elif packet_addr == all_proc_start_addr:
+                        if len(packet) == 55:
+                            logging.info(f"[ALL_PROC]: broadcast packet found!")
+                            yield self.decode_all_proc_broadcast(packet)
+                            received_packets += 1
+                        elif len(packet) == 23:
+                            logging.info(f"[GYRO_PROC]: broadcast packet found!")
+                            yield self.decode_proc_gyro_broadcast(packet)
+                            received_packets += 1
+                        else:
+                            logging.error(f"[GYRO_PROC]: invalid packet length, got {len(packet)}, packet: {packet}!")
+                    elif packet_addr == accel_proc_start_addr:
+                        if len(packet) == 23:
+                            logging.info(f"[ACCEL_PROC]: broadcast packet found!")
+                            yield self.decode_proc_accel_broadcast(packet)
+                            received_packets += 1
+                        else:
+                            logging.error(f"[ACCEL_PROC]: invalid packet length, got {len(packet)}, packet: {packet}!")
+                    elif packet_addr == mag_proc_start_addr:
+                        if len(packet) == 23:
+                            logging.info(f"[MAG_PROC]: broadcast packet found!")
+                            yield self.decode_proc_mag_broadcast(packet)
+                            received_packets += 1
+                        else:
+                            logging.error(f"[MAG_PROC]: invalid packet length, got {len(packet)}, packet: {packet}!")
+                    elif packet_addr == all_raw_start_addr:
+                        if len(packet) == 51:
+                            logging.info(f"[ALL_RAW]: broadcast packet found!")
+                            yield self.decode_all_raw_broadcast(packet)
+                            received_packets += 1
+                        elif len(packet) == 19:
+                            logging.info(f"[GYRO_RAW]: broadcast packet found!")
+                            yield self.decode_raw_gyro_broadcast(packet)
+                            received_packets += 1
+                        else:
+                            logging.error(f"[GYRO_RAW]: invalid packet length, got {len(packet)}, packet: {packet}!")
+                    elif packet_addr == accel_raw_start_addr:
+                        if len(packet) == 19:
+                            logging.info(f"[ACCEL_RAW]: broadcast packet found!")
+                            yield self.decode_raw_accel_broadcast(packet)
+                            received_packets += 1
+                        else:
+                            logging.error(f"[ACCEL_RAW]: invalid packet length, got {len(packet)}, packet: {packet}!")
+                    elif packet_addr == mag_raw_start_addr:
+                        if len(packet) == 23:
+                            logging.info(f"[MAG_RAW]: broadcast packet found!")
+                            yield self.decode_raw_mag_broadcast(packet)
+                            received_packets += 1
+                        else:
+                            logging.error(f"[MAG_RAW]: invalid packet length, got {len(packet)}, packet: {packet}!")
+                    elif packet_addr == quat_addr:
+                        if len(packet) == 19:
+                            logging.info(f"[QUAT]: quaternion broadcast packet found!")
+                            yield self.decode_quaternion_broadcast(packet)
+                            received_packets += 1
+                        else:
+                            logging.error(f"[QUAT]: invalid packet length, got {len(packet)}, packet: {packet}!")
+                    elif packet_addr == gyro_bias_start_addr:
+                        if len(packet) == 19:
+                            logging.info(f"[GYRO_1_BIAS]: broadcast packet found!")
+                            yield self.decode_gyro_bias_broadcast(packet)
+                            received_packets += 1
+                        else:
+                            logging.error(f"[GYRO_1_BIAS]: invalid packet length, got {len(packet)}, packet: {packet}!")
+                    else:
+                        logging.error(f"[BROADCAST ERROR]: packet with addr {packet_addr}, reg: {start_reg.name} found "
+                                      f"of length: {len(packet)} bytes, "
+                                      f"no decoding is implemented for this!! Packet: {packet}")
+
+    def decode_all_raw_broadcast(self, packet) -> UM7AllRawPacket:
         payload = packet[5:-2]
-        assert len(payload) == 12, f"Invalid payload length for gyro bias packet, got {len(payload)}"
-        gyro_bias_x, gyro_bias_y, gyro_bias_z = struct.unpack('>fff', payload)
-        return gyro_bias_x, gyro_bias_y, gyro_bias_z
+        g_x, g_y, g_z, g_time = struct.unpack('>hhh2xf', payload[0:12])
+        a_x, a_y, a_z, a_time = struct.unpack('>hhh2xf', payload[12:24])
+        m_x, m_y, m_z, m_time = struct.unpack('>hhh2xf',   payload[24:36])
+        T, T_t = struct.unpack('>ff', payload[36:44])
+        return UM7AllRawPacket(gyro_raw_x=g_x, gyro_raw_y=g_y, gyro_raw_z=g_z, gyro_raw_time=g_time,
+                               accel_raw_x=a_x, accel_raw_y=a_y, accel_raw_z=a_z, accel_raw_time=a_time,
+                               mag_raw_x=m_x, mag_raw_y=m_y, mag_raw_z=m_z, mag_raw_time=m_time,
+                               temperature=T, temperature_time=T_t)
+
+    def decode_all_proc_broadcast(self, packet) -> UM7AllProcPacket:
+        payload = packet[5:-2]
+        g_x, g_y, g_z, g_time = struct.unpack('>ffff', payload[0:16])
+        a_x, a_y, a_z, a_time = struct.unpack('>ffff', payload[16:32])
+        m_x, m_y, m_z, m_time = struct.unpack('>ffff', payload[32:48])
+        return UM7AllProcPacket(gyro_proc_x=g_x, gyro_proc_y=g_y, gyro_proc_z=g_z, gyro_proc_time=g_time,
+                                accel_proc_x=a_x, accel_proc_y=a_y, accel_proc_z=a_z, accel_proc_time=a_time,
+                                mag_proc_x=m_x, mag_proc_y=m_y, mag_proc_z=m_z, mag_proc_time=m_time)
+
+    def decode_euler_broadcast(self, packet) -> UM7EulerPacket:
+        payload = packet[5:-2]
+        roll, pitch, yaw = struct.unpack('>hhh2x', payload[0:8])
+        roll_rate, pitch_rate, yaw_rate, time_stamp = struct.unpack('>hhh2xf', payload[8:20])
+        return UM7EulerPacket(
+            roll=roll/91.02222, pitch=pitch/91.02222, yaw=yaw/91.02222,
+            roll_rate=roll_rate/91.02222, pitch_rate=pitch_rate/91.02222, yaw_rate=yaw_rate/91.02222,
+            time_stamp=time_stamp
+        )
+
+    def decode_quaternion_broadcast(self, packet) -> UM7QuaternionPacket:
+        payload = packet[5:-2]
+        q_w, q_x, q_y, q_z, q_time = struct.unpack('>hhh2xf', payload[0:12])
+        return UM7QuaternionPacket(
+            q_w=q_w/29789.09091, q_x=q_x/29789.09091, q_y=q_y/29789.09091, q_z=q_z/29789.09091, q_time=q_time
+        )
+
+    def decode_raw_accel_broadcast(self, packet) -> UM7RawAccelPacket:
+        payload = packet[5:-2]
+        a_x, a_y, a_z, a_time = struct.unpack('>hhh2xf', payload[0:12])
+        return UM7RawAccelPacket(accel_raw_x=a_x, accel_raw_y=a_y, accel_raw_z=a_z, accel_raw_time=a_time)
+
+    def decode_raw_gyro_broadcast(self, packet) -> UM7RawGyroPacket:
+        payload = packet[5:-2]
+        g_x, g_y, g_z, g_time = struct.unpack('>hhh2xf', payload[0:12])
+        return UM7RawGyroPacket(gyro_raw_x=g_x, gyro_raw_y=g_y, gyro_raw_z=g_z,gyro_raw_time=g_time)
+
+    def decode_raw_mag_broadcast(self, packet) -> UM7RawMagPacket:
+        payload = packet[5:-2]
+        m_x, m_y, m_z, m_time = struct.unpack('>hhh2xf', payload[0:12])
+        return UM7RawMagPacket(mag_raw_x=m_x, mag_raw_y=m_y, mag_raw_z=m_z, mag_raw_time=m_time)
+
+    def decode_proc_accel_broadcast(self, packet) -> UM7ProcAccelPacket:
+        payload = packet[5:-2]
+        a_x, a_y, a_z, a_time = struct.unpack('>ffff', payload[0:16])
+        return UM7ProcAccelPacket(accel_proc_x=a_x, accel_proc_y=a_y, accel_proc_z=a_z, accel_proc_time=a_time)
+
+    def decode_proc_gyro_broadcast(self, packet) -> UM7ProcGyroPacket:
+        payload = packet[5:-2]
+        g_x, g_y, g_z, g_time = struct.unpack('>ffff', payload[0:16])
+        return UM7ProcGyroPacket(gyro_proc_x=g_x, gyro_proc_y=g_y, gyro_proc_z=g_z, gyro_proc_time=g_time)
+
+    def decode_proc_mag_broadcast(self, packet) -> UM7ProcMagPacket:
+        payload = packet[5:-2]
+        m_x, m_y, m_z, m_time = struct.unpack('>ffff', payload[0:16])
+        return UM7ProcMagPacket(mag_proc_x=m_x, mag_proc_y=m_y, mag_proc_z=m_z, mag_proc_time=m_time)
+
+    def decode_gyro_bias_broadcast(self, packet) -> UM7GyroBiasPacket:
+        payload = packet[5:-2]
+        gyro_1_bias_x, gyro_1_bias_y, gyro_1_bias_z, = struct.unpack('>fff', payload[0:12])
+        return UM7GyroBiasPacket(gyro_1_bias_x=gyro_1_bias_x, gyro_1_bias_y=gyro_1_bias_y, gyro_1_bias_z=gyro_1_bias_z)
+
+    def decode_health_broadcast(self, packet) -> UM7HealthPacket:
+        payload = packet[5:-2]
+        health, = struct.unpack('>I', payload[0:4])
+        return UM7HealthPacket(health=health)
 
 
 if __name__ == '__main__':
