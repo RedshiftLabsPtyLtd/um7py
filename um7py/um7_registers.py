@@ -17,8 +17,8 @@ from um7py.rsl_xml_svd.rsl_svd_parser import RslSvdParser
 class UM7Registers(ABC):
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.svd_parser = RslSvdParser(svd_file=UM7Regs.find_svd('um7.svd'))
+        # super().__init__(**kwargs)
+        self.svd_parser = RslSvdParser(svd_file=UM7Registers.find_svd('um7.svd'))
 
     @staticmethod
     def find_svd(svd_file_name: str):

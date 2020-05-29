@@ -35,7 +35,7 @@
 <device schemaVersion="1.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="RSL-SVD.xsd" >
   <vendor>Redshift Labs Pty Ltd</vendor>                                  <!-- device vendor name -->
   <vendorID>RedshiftLabs</vendorID>                               <!-- device vendor short name -->
-  <name>UM8</name>                                                <!-- name of part-->
+  <name>UM7</name>                                                <!-- name of part-->
   <series>IMU</series>                                            <!-- device series the device belongs to -->
   <version>0.1</version>                                          <!-- version of this description, adding CMSIS-SVD 1.1 tags -->
   <description>UM7 Board Peripheral Description</description>
