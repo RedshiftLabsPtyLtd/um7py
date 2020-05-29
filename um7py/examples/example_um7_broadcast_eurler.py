@@ -24,5 +24,6 @@ if __name__ == '__main__':
     device_file = os.path.join(script_dir, os.pardir, "um7_A500CNP8.json")
     um7 = UM7Serial(device=device_file)
 
-    for packet in um7.recv_all_raw_broadcast(num_packets=10000):
+    for packet in um7.recv_euler_broadcast(num_packets=100):
         logging.warning(packet)
+

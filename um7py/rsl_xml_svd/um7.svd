@@ -211,6 +211,18 @@
               <bitRange>[8:8]</bitRange>
               <dataType>bitField</dataType>
               <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>GPS_DATA_ON</name>
+                  <description>GPS data will be transmitted automatically whenever new GPS data is received.</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>GPS_DATA_OFF</name>
+                  <description>GPS data will *not* be transmitted automatically whenever new GPS data is received.</description>
+                  <value>0</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
 
             <!-- SAT: automatic transmission of sattelite details -->
@@ -220,6 +232,18 @@
               <bitRange>[4:4]</bitRange>
               <dataType>bitField</dataType>
               <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>SAT_DETAILS_ON</name>
+                  <description>Satellite details will be transmitted whenever they are provided by the GPS.</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>SAT_DETAILS_OFF</name>
+                  <description>Satellite details will not be transmitted whenever they are provided by the GPS.</description>
+                  <value>0</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
           </fields>
         </register>

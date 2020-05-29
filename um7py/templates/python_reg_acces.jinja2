@@ -1,0 +1,21 @@
+# Author: Dr. Konstantin Selyunin
+# Version: {{ version }}
+# Date: {{ date }}
+
+print(f"\\n========== CONFIG REGISTERS ===================================")
+{%- for register in cregs %}
+print(f"{{ '{:<30s}'.format(register.name.lower()) }}: {um7.{{ register.name.lower() }}}")
+{%- endfor %}
+
+
+print(f"\\n========== DATA REGISTERS ===================================")
+{%- for register in dregs %}
+print(f"{{ '{:<30s}'.format(register.name.lower()) }}: {um7.{{ register.name.lower() }}}")
+{%- endfor %}
+
+
+print(f"\\n========== COMMAND REGISTERS ===================================")
+{%- for register in commands %}
+print(f"{{ '{:<30s}'.format(register.name.lower()) }}: {um7.{{ register.name.lower() }}}")
+{%- endfor %}
+

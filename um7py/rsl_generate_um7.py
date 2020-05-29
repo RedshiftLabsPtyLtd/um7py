@@ -17,6 +17,7 @@ if __name__ == '__main__':
     rsl_svd_generator = RslGenerator(svd_file=svd_file)
     um7_main_registers = indent(rsl_svd_generator.generate_props_for_main_register_map(), ' ' * 4)
     um7_hidden_registers = indent(rsl_svd_generator.generate_props_for_hidden_registers(), ' ' * 4)
+
     today = datetime.now().strftime('%Y.%m.%d')
     params_dict = {
         'generated_code_for_main_register_map': um7_main_registers,
@@ -27,3 +28,14 @@ if __name__ == '__main__':
     gen_code = RslGenerator.render_template_to_str(um7_template, params_dict)
     with open('um7_registers.py', 'w') as fd:
         fd.write(gen_code)
+
+    reg_addr_enum_template = os.path.abspath('templates/python_reg_acces.jinja2')
+    param_dict = {'version': 'v0.1',
+                  'date': today,
+                  'cregs': rsl_svd_generator.cregs,
+                  'dregs': rsl_svd_generator.dregs,
+                  'commands': rsl_svd_generator.commands}
+    gen_code = RslGenerator.render_template_to_str(reg_addr_enum_template, param_dict)
+    with open('um7_py_accessor.py', 'w') as fd:
+        fd.write(gen_code)
+

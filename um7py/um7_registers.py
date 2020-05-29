@@ -2,7 +2,7 @@
 
 # Author: Dr. Konstantin Selyunin
 # License: MIT
-# Created: 2020.05.27
+# Created: 2020.05.29
 
 import logging
 import os.path
@@ -17,7 +17,6 @@ from um7py.rsl_xml_svd.rsl_svd_parser import RslSvdParser
 class UM7Registers(ABC):
 
     def __init__(self, **kwargs):
-        # super().__init__(**kwargs)
         self.svd_parser = RslSvdParser(svd_file=UM7Registers.find_svd('um7.svd'))
 
     @staticmethod
@@ -984,13 +983,10 @@ class UM7Registers(ABC):
             reg = self.svd_parser.find_register_by(name='DREG_HEALTH')
             # find value for SATS_USED bit field
             sats_used_val = (payload_uint32 >> 26) & 0x003F
-            sats_used_enum = reg.find_field_by(name='SATS_USED').find_enum_entry_by(value=sats_used_val)
             # find value for HDOP bit field
             hdop_val = (payload_uint32 >> 16) & 0x03FF
-            hdop_enum = reg.find_field_by(name='HDOP').find_enum_entry_by(value=hdop_val)
             # find value for SATS_IN_VIEW bit field
             sats_in_view_val = (payload_uint32 >> 10) & 0x003F
-            sats_in_view_enum = reg.find_field_by(name='SATS_IN_VIEW').find_enum_entry_by(value=sats_in_view_val)
             # find value for OVF bit field
             ovf_val = (payload_uint32 >> 8) & 0x0001
             ovf_enum = reg.find_field_by(name='OVF').find_enum_entry_by(value=ovf_val)
@@ -1013,7 +1009,7 @@ class UM7Registers(ABC):
             gps_val = (payload_uint32 >> 0) & 0x0001
             gps_enum = reg.find_field_by(name='GPS').find_enum_entry_by(value=gps_val)
 
-            return sats_used_enum, hdop_enum, sats_in_view_enum, ovf_enum, mg_n_enum, acc_n_enum, accel_enum, gyro_enum, mag_enum, gps_enum
+            return sats_used_val, hdop_val, sats_in_view_val, ovf_enum, mg_n_enum, acc_n_enum, accel_enum, gyro_enum, mag_enum, gps_enum
         else:
             return None
 
