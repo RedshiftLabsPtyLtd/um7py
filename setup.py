@@ -1,11 +1,16 @@
+import json
 import setuptools
 from os import environ
+
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-version_major = '0' if not environ.get('VERSION_MAJOR') else environ['VERSION_MAJOR']
-version_minor = '0' if not environ.get('VERSION_MINOR') else environ['VERSION_MINOR']
+with open("VERSION", "r") as fh:
+    version_info = json.load(fh)
+
+version_major = '0' if not version_info.get('VERSION_MAJOR') else version_info['VERSION_MAJOR']
+version_minor = '0' if not version_info.get('VERSION_MINOR') else version_info['VERSION_MINOR']
 pipeline_number = '1' if not environ.get('CI_BUILD_NUMBER') else environ['CI_BUILD_NUMBER']
 
 setuptools.setup(
@@ -24,11 +29,9 @@ setuptools.setup(
     package_dir={'um7py': 'um7py'},
     package_data={"um7py": ['rsl_xml_svd/RSL-SVD.xsd',
                             'rsl_xml_svd/um7.svd',
-                            'templates/um7_template.jinja2',
-                            'templates/no_getter_template.jinja2',
-                            'templates/setter_template.jinja2',
-                            'templates/python_reg_acces.jinja2',
-                            'templates/getter_template.jinja2']},
+                            'rsl_xml_svd/rsl_svd_parser.py',
+                            'templates/*.jinja2',
+                            'examples/*.py']},
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
