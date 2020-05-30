@@ -1,7 +1,7 @@
 # UM7 Python 3 Driver
 
 [![PyPI version](https://badge.fury.io/py/um7py.svg)](https://badge.fury.io/py/um7py)
-
+![Python package](https://github.com/RedshiftLabsPtyLtd/um7py/workflows/Python%20package/badge.svg)
 
 **TL;DR:** *"Swiss army knife"* for using 
 the [`UM7`](https://redshiftlabs.com.au/product/um7-orientation-sensor/) board
