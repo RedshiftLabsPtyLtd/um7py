@@ -58,10 +58,30 @@ Below we outline the repo structure:
 * [`um7py/um7_registers.py`](./um7py/um7_registers.py): UM7 register description file;
 * [`um7py/um7_serial.py`](./um7py/um7_serial.py): UM7 UART driver;
 
+## HW Prerequisites
 
+UM7 provides serial (UART) and SPI interfaces, hence the two main ways to access the sensor data
+are UART (serial) or SPI. The differences in short: UART provides broadcast functionality, i.e.
+when packets can transmitted by the board with a specified frequency (transmission frequencies are set up in 
+configuration registers), and it is possible to issue sensor commands (i.e. accessing command registers).
+SPI access the sensor register on demand (i.e. no broadcast functionality), and only
+configuration and data registers can be accessed. Accessing commands is only supported
+over UART.
 
+When using UM7 over serial, it is possible to connect to the target system (i.e. user's target):
 
-## OS Prerequisites
+* to the serial port directly (e.g. when serial pins are wired out as on the Raspberry PI, NVIDIA Jetson Nano, or other 
+board computers with GPIO and UART pins wired out);
+
+* to the USB port using the  [USB Expansion Board](https://redshiftlabs.com.au/product/usb-expansion-board/),
+which performs USB to serial conversion.
+
+When using the UM7 over SPI, there are also a couple of possibilities:
+
+* to the SPI pins directly (e.g. Raspberry PI, NVIDIA Jetson Nano), i.e.
+the pins are wired to the [SoC](https://en.wikipedia.org/wiki/System_on_a_chip) directly;
+
+* to the USB port using USB to SPI converter, e.g. [USB-ISS](https://www.robot-electronics.co.uk/htm/usb_iss_tech.htm).
  
 ## Installation
 
