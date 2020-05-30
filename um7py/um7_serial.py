@@ -397,78 +397,78 @@ class UM7Serial(UM7Registers):
 
                     if packet_addr == health_start_addr:
                         if len(packet) == 11:
-                            logging.info(f"[HEALTH]: broadcast packet found!")
+                            logging.info("[HEALTH]: broadcast packet found!")
                             yield self.decode_health_broadcast(packet)
                             received_packets += 1
                         else:
                             logging.error(f"[HEALTH]: invalid packet length, got {len(packet)}, packet: {packet}!")
                     elif packet_addr == euler_start_addr:
                         if len(packet) == 27:
-                            logging.info(f"[EULER]: broadcast packet found!")
+                            logging.info("[EULER]: broadcast packet found!")
                             yield self.decode_euler_broadcast(packet)
                             received_packets += 1
                         else:
                             logging.error(f"[EULER]: invalid packet length, got {len(packet)}, packet: {packet}!")
                     elif packet_addr == all_proc_start_addr:
                         if len(packet) == 55:
-                            logging.info(f"[ALL_PROC]: broadcast packet found!")
+                            logging.info("[ALL_PROC]: broadcast packet found!")
                             yield self.decode_all_proc_broadcast(packet)
                             received_packets += 1
                         elif len(packet) == 23:
-                            logging.info(f"[GYRO_PROC]: broadcast packet found!")
+                            logging.info("[GYRO_PROC]: broadcast packet found!")
                             yield self.decode_proc_gyro_broadcast(packet)
                             received_packets += 1
                         else:
                             logging.error(f"[GYRO_PROC]: invalid packet length, got {len(packet)}, packet: {packet}!")
                     elif packet_addr == accel_proc_start_addr:
                         if len(packet) == 23:
-                            logging.info(f"[ACCEL_PROC]: broadcast packet found!")
+                            logging.info("[ACCEL_PROC]: broadcast packet found!")
                             yield self.decode_proc_accel_broadcast(packet)
                             received_packets += 1
                         else:
                             logging.error(f"[ACCEL_PROC]: invalid packet length, got {len(packet)}, packet: {packet}!")
                     elif packet_addr == mag_proc_start_addr:
                         if len(packet) == 23:
-                            logging.info(f"[MAG_PROC]: broadcast packet found!")
+                            logging.info("[MAG_PROC]: broadcast packet found!")
                             yield self.decode_proc_mag_broadcast(packet)
                             received_packets += 1
                         else:
                             logging.error(f"[MAG_PROC]: invalid packet length, got {len(packet)}, packet: {packet}!")
                     elif packet_addr == all_raw_start_addr:
                         if len(packet) == 51:
-                            logging.info(f"[ALL_RAW]: broadcast packet found!")
+                            logging.info("[ALL_RAW]: broadcast packet found!")
                             yield self.decode_all_raw_broadcast(packet)
                             received_packets += 1
                         elif len(packet) == 19:
-                            logging.info(f"[GYRO_RAW]: broadcast packet found!")
+                            logging.info("[GYRO_RAW]: broadcast packet found!")
                             yield self.decode_raw_gyro_broadcast(packet)
                             received_packets += 1
                         else:
                             logging.error(f"[GYRO_RAW]: invalid packet length, got {len(packet)}, packet: {packet}!")
                     elif packet_addr == accel_raw_start_addr:
                         if len(packet) == 19:
-                            logging.info(f"[ACCEL_RAW]: broadcast packet found!")
+                            logging.info("[ACCEL_RAW]: broadcast packet found!")
                             yield self.decode_raw_accel_broadcast(packet)
                             received_packets += 1
                         else:
                             logging.error(f"[ACCEL_RAW]: invalid packet length, got {len(packet)}, packet: {packet}!")
                     elif packet_addr == mag_raw_start_addr:
                         if len(packet) == 23:
-                            logging.info(f"[MAG_RAW]: broadcast packet found!")
+                            logging.info("[MAG_RAW]: broadcast packet found!")
                             yield self.decode_raw_mag_broadcast(packet)
                             received_packets += 1
                         else:
                             logging.error(f"[MAG_RAW]: invalid packet length, got {len(packet)}, packet: {packet}!")
                     elif packet_addr == quat_addr:
                         if len(packet) == 19:
-                            logging.info(f"[QUAT]: quaternion broadcast packet found!")
+                            logging.info("[QUAT]: quaternion broadcast packet found!")
                             yield self.decode_quaternion_broadcast(packet)
                             received_packets += 1
                         else:
                             logging.error(f"[QUAT]: invalid packet length, got {len(packet)}, packet: {packet}!")
                     elif packet_addr == gyro_bias_start_addr:
                         if len(packet) == 19:
-                            logging.info(f"[GYRO_1_BIAS]: broadcast packet found!")
+                            logging.info("[GYRO_1_BIAS]: broadcast packet found!")
                             yield self.decode_gyro_bias_broadcast(packet)
                             received_packets += 1
                         else:
@@ -523,7 +523,7 @@ class UM7Serial(UM7Registers):
     def decode_raw_gyro_broadcast(self, packet) -> UM7RawGyroPacket:
         payload = packet[5:-2]
         g_x, g_y, g_z, g_time = struct.unpack('>hhh2xf', payload[0:12])
-        return UM7RawGyroPacket(gyro_raw_x=g_x, gyro_raw_y=g_y, gyro_raw_z=g_z,gyro_raw_time=g_time)
+        return UM7RawGyroPacket(gyro_raw_x=g_x, gyro_raw_y=g_y, gyro_raw_z=g_z, gyro_raw_time=g_time)
 
     def decode_raw_mag_broadcast(self, packet) -> UM7RawMagPacket:
         payload = packet[5:-2]

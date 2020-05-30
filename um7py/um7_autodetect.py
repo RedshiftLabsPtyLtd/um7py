@@ -61,17 +61,16 @@ def um7_autodetect(file_name=None):
         return um7_linux_autodetect(file_name)
 
 
-description = \
-"""
+description = """\
 Save parameters of the USB2Serial device to a file,
 when UM7 is used with USB2Serial converter.
 USB2Serial for UM7 uses FTDI chip, and has no specific
-descriptor information to differentiate itself 
+descriptor information to differentiate itself
 from other FTDI devices (e.g. stepper motors or other
-devices implementing USB2Serial connection). 
+devices implementing USB2Serial connection).
 
-In order to differentiate these devices, we 
-created this script, which searches for available 
+In order to differentiate these devices, we
+created this script, which searches for available
 devices and stores information in a .json file.
 \n
 Follow the procedure below:
@@ -80,7 +79,7 @@ Follow the procedure below:
 1. Disconnect all the USB2Serial-related devices;
 2. Connect UM7 sensor;
 3. Launch the script (optional -f flag specifies file name);
-4. The file `um7_[serial_id].json` containing device 
+4. The file `um7_[serial_id].json` containing device
 specific information appears on success.
 
 This file will be used by UM7 drivers

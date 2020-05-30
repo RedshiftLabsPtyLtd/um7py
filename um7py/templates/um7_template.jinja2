@@ -38,7 +38,6 @@ class UM7Registers(ABC):
     def write_register(self, reg_addr: int, reg_value: Union[int, bytes, float], **kw):
         pass
 
-
 {{ generated_code_for_main_register_map }}
 {{ generated_code_for_hidden_register_map }}
 if __name__ == '__main__':

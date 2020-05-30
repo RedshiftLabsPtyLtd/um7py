@@ -102,7 +102,7 @@ def test_generate_props_for_register_map(rsl_generator: RslGenerator):
     generated_code = rsl_generator.generate_props_for_main_register_map()
     print(generated_code)
     assert len(generated_code) > 0, "No code is generated!"
-    assert "not implemented" not in generated_code.lower(), f"Not implemented should not be in generated code!"
+    assert "not implemented" not in generated_code.lower(), "Not implemented should not be in generated code!"
 
 
 @pytest.mark.gen
@@ -139,5 +139,5 @@ def test_generated_code_for_combined(rsl_generator: RslGenerator):
     generated_code = rsl_generator.generate_props_for_register(register)
     print(generated_code)
     assert len(generated_code) > 0, f"No code has been generated for {register_name}"
-    assert "not implemented" not in generated_code.lower(), f"Not implemented should not be in generated code!"
+    assert "not implemented" not in generated_code.lower(), "Not implemented should not be in generated code!"
 

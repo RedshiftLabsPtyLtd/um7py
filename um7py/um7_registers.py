@@ -4,12 +4,11 @@
 # License: MIT
 # Created: 2020.05.29
 
-import logging
 import os.path
 import struct
 
 from abc import abstractmethod, ABC
-from typing import Union, Tuple
+from typing import Union
 
 from um7py.rsl_xml_svd.rsl_svd_parser import RslSvdParser
 
