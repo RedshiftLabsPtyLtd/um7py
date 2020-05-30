@@ -68,6 +68,8 @@ SPI access the sensor register on demand (i.e. no broadcast functionality), and 
 configuration and data registers can be accessed. Accessing commands is only supported
 over UART.
 
+### Serial connection (UART)
+
 When using UM7 over serial, it is possible to connect to the target system (i.e. user's target):
 
 * to the serial port directly (e.g. when serial pins are wired out as on the Raspberry PI, NVIDIA Jetson Nano, or other 
@@ -76,18 +78,47 @@ board computers with GPIO and UART pins wired out);
 * to the USB port using the  [USB Expansion Board](https://redshiftlabs.com.au/product/usb-expansion-board/),
 which performs USB to serial conversion.
 
+### SPI connection
+
 When using the UM7 over SPI, there are also a couple of possibilities:
 
 * to the SPI pins directly (e.g. Raspberry PI, NVIDIA Jetson Nano), i.e.
 the pins are wired to the [SoC](https://en.wikipedia.org/wiki/System_on_a_chip) directly;
 
 * to the USB port using USB to SPI converter, e.g. [USB-ISS](https://www.robot-electronics.co.uk/htm/usb_iss_tech.htm).
- 
+
+The difference between the two, that in the first case SoC pins support the SPI
+directly (on the hardware level, which also mirrors in the OS level), then the OS is likely to have the SPI device
+driver built-in (e.g. Raspberry PI). In the second case, using external converter (e.g. USB-ISS),
+the device will be shown as a so-called [cdc_acm](https://www.keil.com/pack/doc/mw/USB/html/group__usbh__cdcacm_functions.html) (communication device class),
+and low-level SPI communication will be done by the converter, yet to the OS the 
+converter will be shown as Abstract Control Model (ACM) USB Device.
+
 ## Installation
+
+```sh
+pip install um7py
+```
 
 ## Python dependencies
 
+**TL;DR:** install 
+(i) `pyserial`, 
+(ii) `pyudev` (if on Linux),
+(iii) `dataclasses` (if using `3.6` and not `3.7`).
+
+
 ## Quick start
+
+Create `UM7` serial communication object, UM7 connected to a port `/dev/ttyUSB0`,
+and read the firmware version:
+
+```python
+from um7py import UM7Serial
+um7_serial = UM7Serial(port_name='/dev/ttyUSB0')
+print(f"um7 firmware revision: {um7_serial.get_fw_revision}")
+```
+
 
 ## Cautious start
 
@@ -98,7 +129,7 @@ the pins are wired to the [SoC](https://en.wikipedia.org/wiki/System_on_a_chip) 
 We are so grateful for the open source community for creating
 open source UM7 driver versions and sharing it with a world!
 We are inspired by your work, and at the same time 
-want to improve on that:
+want to improve:
 provide UART and SPI communication, in detail documentation 
 and explanations to facilitate the start for new users.
 
