@@ -184,7 +184,7 @@ class UM7Serial(UM7Registers):
         remainder = sensor_response[next_packet_start_idx:]
         return packet, remainder
 
-    def find_response(self, reg_addr: int, hidden: bool = False) -> Tuple[bool, bytes]:
+    def find_response(self, reg_addr: int, hidden: bool = False, expected_length: int = 7) -> Tuple[bool, bytes]:
         while len(self.buffer) > 0:
             packet, self.buffer = self.find_packet(self.buffer)
             if len(packet) < 4:
@@ -194,7 +194,7 @@ class UM7Serial(UM7Registers):
             packet_type = packet[3]
             is_packet_hidden = bool((packet_type >> 1) & 0x01)
             response_addr = packet[4]
-            if response_addr == reg_addr and hidden == is_packet_hidden:
+            if response_addr == reg_addr and hidden == is_packet_hidden and len(packet) == expected_length:
                 # required packet found
                 return True, packet
         else:
@@ -242,18 +242,18 @@ class UM7Serial(UM7Registers):
         logging.debug(f"packet sent: {packet_to_send}")
         self.send_recv(packet_to_send)
         t = monotonic()
-        ok, sensor_reply = self.find_response(reg_addr, hidden)
+        ok, sensor_reply = self.find_response(reg_addr, hidden, 11)
         if ok:
             logging.debug(f"packet: {sensor_reply}")
             self.check_packet(sensor_reply)
             ok, payload = self.get_payload(sensor_reply)
             return ok, payload
         else:
-            while monotonic() - t < 0.15:
+            while monotonic() - t < 0.2:
                 # try to send <-> receive packets for a pre-defined time out time
                 self.send_recv(packet_to_send)
-                ok, sensor_reply = self.find_response(reg_addr, hidden)
-                if ok:
+                ok, sensor_reply = self.find_response(reg_addr, hidden, 11)
+                if ok and len(sensor_reply) > 7:
                     logging.debug(f"packet: {sensor_reply}")
                     self.check_packet(sensor_reply)
                     ok, payload = self.get_payload(sensor_reply)
