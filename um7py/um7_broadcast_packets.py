@@ -193,9 +193,13 @@ class UM7VelocityPacket:
 
 @dataclass
 class UM7GyroBiasPacket:
-    gyro_1_bias_x: float
-    gyro_1_bias_y: float
-    gyro_1_bias_z: float
+    gyro_bias_x: float
+    gyro_bias_y: float
+    gyro_bias_z: float
+
+    def __repr__(self):
+        return f"GyroBiasPacket("\
+               f"gyro_bias=[{self.gyro_bias_x:>+8.3f}, {self.gyro_bias_y:>+8.3f}, {self.gyro_bias_z:>+8.3f}])"
 
 
 if __name__ == '__main__':

@@ -391,7 +391,7 @@ class UM7Serial(UM7Registers):
                     mag_proc_start_addr = self.svd_parser.find_register_by(name='DREG_MAG_PROC_X').address
                     all_raw_start_addr = self.svd_parser.find_register_by(name='DREG_GYRO_RAW_XY').address
                     accel_raw_start_addr = self.svd_parser.find_register_by(name='DREG_ACCEL_RAW_XY').address
-                    mag_raw_start_addr = self.svd_parser.find_register_by(name='DREG_MAG_RAW_X').address
+                    mag_raw_start_addr = self.svd_parser.find_register_by(name='DREG_MAG_RAW_XY').address
                     gyro_bias_start_addr = self.svd_parser.find_register_by(name='DREG_GYRO_BIAS_X').address
                     quat_addr = self.svd_parser.find_register_by(name='DREG_QUAT_AB').address
 
@@ -547,8 +547,8 @@ class UM7Serial(UM7Registers):
 
     def decode_gyro_bias_broadcast(self, packet) -> UM7GyroBiasPacket:
         payload = packet[5:-2]
-        gyro_1_bias_x, gyro_1_bias_y, gyro_1_bias_z, = struct.unpack('>fff', payload[0:12])
-        return UM7GyroBiasPacket(gyro_1_bias_x=gyro_1_bias_x, gyro_1_bias_y=gyro_1_bias_y, gyro_1_bias_z=gyro_1_bias_z)
+        gyro_bias_x, gyro_bias_y, gyro_bias_z, = struct.unpack('>fff', payload[0:12])
+        return UM7GyroBiasPacket(gyro_bias_x=gyro_bias_x, gyro_bias_y=gyro_bias_y, gyro_bias_z=gyro_bias_z)
 
     def decode_health_broadcast(self, packet) -> UM7HealthPacket:
         payload = packet[5:-2]
