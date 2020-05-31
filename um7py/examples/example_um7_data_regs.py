@@ -16,7 +16,7 @@ if __name__ == '__main__':
         format='[%(asctime)s.%(msecs)03d] [%(levelname)-8s]:  %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S',
         handlers=[
-            logging.FileHandler(f'{os.path.basename(__file__)}.log'),
+            logging.FileHandler(f'{os.path.basename(__file__)}.log', mode='w'),
             logging.StreamHandler(sys.stdout),
         ])
     script_dir = os.path.dirname(__file__)
