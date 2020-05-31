@@ -11,7 +11,7 @@ with open("VERSION", "r") as fh:
 
 version_major = '0' if not version_info.get('VERSION_MAJOR') else version_info['VERSION_MAJOR']
 version_minor = '0' if not version_info.get('VERSION_MINOR') else version_info['VERSION_MINOR']
-pipeline_number = '1' if not environ.get('CI_BUILD_NUMBER') else environ['CI_BUILD_NUMBER']
+pipeline_number = '0' if not environ.get('GITHUB_RUN_NUMBER') else environ['GITHUB_RUN_NUMBER']
 
 setuptools.setup(
     name="um7py",
