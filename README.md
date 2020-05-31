@@ -75,8 +75,10 @@ over UART.
 
 When using UM7 over serial, it is possible to connect to the target system (i.e. user's target):
 
-* to the serial port directly (e.g. when serial pins are wired out as on the Raspberry PI, NVIDIA Jetson Nano, or other 
-board computers with GPIO and UART pins wired out);
+* to the serial port directly (e.g. when serial pins are wired out as on the 
+[Raspberry PI](https://www.raspberrypi.org/), 
+[NVIDIA Jetson Nano](https://developer.nvidia.com/embedded/jetson-nano-developer-kit), 
+or other board computers with GPIO and UART pins wired out);
 
 * to the USB port using the  [USB Expansion Board](https://redshiftlabs.com.au/product/usb-expansion-board/),
 which performs USB to serial conversion.
@@ -122,10 +124,156 @@ um7_serial = UM7Serial(port_name='/dev/ttyUSB0')
 print(f"um7 firmware revision: {um7_serial.get_fw_revision}")
 ```
 
+Reading **all types** of broadcast packets from `UM7`, 1000 packets in total:
 
-## Cautious start
+```python
+from um7py import UM7Serial
+um7_serial = UM7Serial(port_name='/dev/ttyUSB0')
+for packet in um7_serial.recv_broadcast(num_packets=1000):
+    print(f"packet: {packet}")
+```
+
+Reading the **raw sensor data** broadcast packets from `UM7`, not limiting number of packets:
+
+```python
+from um7py import UM7Serial
+um7_serial = UM7Serial(port_name='/dev/ttyUSB0')
+for packet in um7_serial.recv_all_raw_broadcast():
+    print(f"packet: {packet}")
+```
+
+Reading 100 **processed sensor data** broadcast packets from `UM7`:
+
+```python
+from um7py import UM7Serial
+um7_serial = UM7Serial(port_name='/dev/ttyUSB0')
+for packet in um7_serial.recv_all_proc_broadcast(num_packets=100):
+    print(f"packet: {packet}")
+```
+
+Reading the **Euler angles** broadcast packets from `UM7`:
+
+```python
+from um7py import UM7Serial
+um7_serial = UM7Serial(port_name='/dev/ttyUSB0')
+for packet in um7_serial.recv_euler_broadcast():
+    print(f"packet: {packet}")
+```
+
+Reading the `CREG_COM_SETTINGS` configuration register from `UM7`:
+
+```python
+from um7py import UM7Serial
+um7_serial = UM7Serial(port_name='/dev/ttyUSB0')
+print(f"received value: {um7_serial.creg_com_settings}")
+```
+
+Writing 40 (changing `ALL_RAW_RATE` to 40 Hz) to the `CREG_COM_RATES2` register:
+
+```python
+from um7py import UM7Serial
+um7_serial = UM7Serial(port_name='/dev/ttyUSB0')
+um7_serial.creg_com_rates2 = 40
+```
+
+## Slow start
+
+Take a look at the available [examples](./um7py/examples).
+
+In order to use the `python` driver functionality one first needs to 
+create a communication object (in our case `UM7Serial` or `UM7SPI`).
+
+The construction of the UART communication object can be done 
+either by specifying a `port_name` directly (e.g. `/dev/ttyS0`), or
+by specifying the `device` file that stores *USB2Serial* config
+(e.g. `um7_A500CNP8.json`). The `device` argument shall 
+only be used, when UM7 is connected via the 
+[USB Expansion Board](https://redshiftlabs.com.au/product/usb-expansion-board/),
+the `device` stores properties of the expansion board. Why?
+The issue to keep in mind that when the sensor is re-plugged,
+it might appear to the OS as different serial connection,
+i.e. when first plugged in the OS detects the device as
+`/dev/ttyS0`, then after re-plugging exactly the same 
+sensor might appear by different port name, e.g. `/dev/ttyS1`, which 
+means the user code needs to be changed.
+If using the `device`, we store properties of the
+[USB Expansion Board](https://redshiftlabs.com.au/product/usb-expansion-board/)
+in a JSON file (e.g. converter chip ID) 
+and search connection which match with the properties, and 
+in this case connecting to the sensor, even if is shown as a 
+different serial connection by the OS.
+
+So the communication object can either be created with specifying the `port_name`:
+
+```python
+from um7py import UM7Serial
+um7_serial = UM7Serial(port_name='/dev/ttyUSB0')
+```
+
+Or with specifying the `device`:
+
+```python
+from um7py import UM7Serial
+um7 = UM7Serial(device='um7_A500CNP8.json')
+```
+
+The two options are exclusive, i.e. specifying both `port_name` and `device` will not work.
+
+Accessing to the individual registers is done via python 
+[properties](https://docs.python.org/3/library/functions.html#property).
+Properties for register names are all lower-case, split by `_`.
+
+For example, reading the `CREG_COM_RATES1`:
+
+```python
+from um7py import UM7Serial
+um7 = UM7Serial(device='um7_A500CNP8.json')
+um7.creg_com_rates1
+```
+
+Note, that reading single register is quite a slow operation,
+since one first constructs and sends a packet, and then parses 
+output for response. 
+Reading single registers is not recommended for reading sensor data,
+since it might happen, that data from sensor axis come from different measurements.
+We strongly advice to use broadcast messages for reading sensor and fusion data.
 
 ## UM7 Data Packets
+
+`UM7` sends different types of broadcast messages over the UART.
+These messages are e.g. HEALTH packet (i.e. the `DREG_HEALTH` register),
+raw sensor data (raw gyro, accelerometer, and magnetometer, and temperature),
+processed sensor data (processed gyro, accelerometer, and magnetometer),
+Euler angles, quaternions.
+
+These data packets are stored in the repo as 
+[dataclasses](https://docs.python.org/3/library/dataclasses.html)
+in the file [um7_broadcast_packets.py](./um7py/um7_broadcast_packets.py).
+Note, that only payload stored in the dataclasses, and all the 
+checks (e.g. checksum, data length) is done during broadcast reception.
+
+For example, the raw data broadcast message has the following payload:
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class UM7AllRawPacket:
+    gyro_raw_x: int
+    gyro_raw_y: int
+    gyro_raw_z: int
+    gyro_raw_time: float
+    accel_raw_x: int
+    accel_raw_y: int
+    accel_raw_z: int
+    accel_raw_time: float
+    mag_raw_x: int
+    mag_raw_y: int
+    mag_raw_z: int
+    mag_raw_time: float
+    temperature: float
+    temperature_time: float
+```
 
 ## Acknowledgement
 
@@ -151,4 +299,4 @@ adding new functionality.
 
 [Dr. Konstantin Selyunin](http://selyunin.com/), 
 for suggestions / questions / comments 
-please contact .
+please contact selyunin [dot] k [dot] v [at] gmail [dot] com.
