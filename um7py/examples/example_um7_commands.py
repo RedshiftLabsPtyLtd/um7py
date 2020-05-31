@@ -22,12 +22,14 @@ if __name__ == '__main__':
     script_dir = os.path.dirname(__file__)
     device_file = os.path.join(script_dir, os.pardir, "um7_A500CNP8.json")
     um7 = UM7Serial(device=device_file)
-    print("Below are collection of commands, running these commands might erase your settings."
-          " Only do it if you are sure of what you are doing.")
+    print("This script lists all available commands for UM7, running these commands might erase your settings.\n"
+          "Executing these commands in order does not have any meaning, all commands are listed for reference only.\n"
+          "Change the code in this fine to run all the commands you need.")
     know_what_will_happen = False
     if not know_what_will_happen:
-        print("NO commands will be executed, Get firmware revision and exit. All fine."
-              " To execute the commands change the `know_what_will_happen` to `True` and select commands you need.")
+        print("NO commands will be executed, Get firmware revision and exit.\n"
+              "Everything is fine, all the settings stay unchanged.\n"
+              "To execute the commands change the `know_what_will_happen` to `True` and select commands you need.")
         print(f"get_fw_revision               : {um7.get_fw_revision}")
     else:
         print(f"\\n========== COMMAND REGISTERS ===================================")
