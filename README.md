@@ -4,8 +4,8 @@
 ![Python package](https://github.com/RedshiftLabsPtyLtd/um7py/workflows/Python%20package/badge.svg)
 
 **TL;DR:** *"Swiss army knife"* for using 
-the [`UM7`](https://redshiftlabs.com.au/product/um7-orientation-sensor/) board
-with Python 3 (Python 3.6+).
+the [`UM7`](https://redshiftlabs.com.au/product/um7-orientation-sensor/) 
+orientation sensor with Python 3 (Python 3.6+).
 
 `UM7` comes with the 
 [_"Serial Software Interface"_](https://redshiftlabs.com.au/support-services/serial-interface-software/)
@@ -15,7 +15,7 @@ The `python` driver provided here is designed to keep you up and running
 on different platforms (Linux, Windows, Mac).
 If you have the `UM7` board and want to use it on Linux (e.g. Ubuntu, Debian, Raspbian, Yocto, Suse, etc.),
 Windows or Mac, this repo provides driver code to send / receive individual packets
-and broadcasts, as well example code how to create a sensor communication object.
+and receive broadcasts, as well example code how to create a sensor communication object.
 
 In particular, the driver has the following capabilities: 
 
@@ -109,8 +109,8 @@ pip install um7py
 
 **TL;DR:** install 
 (i) `pyserial`, 
-(ii) `pyudev` (if on Linux),
-(iii) `dataclasses` (if using `3.6` and not `3.7`).
+(ii) `pyudev` (for Linux),
+(iii) `dataclasses` (included in standard library since `python3.7`, needs to be installed for `3.6`).
 
 
 ## Quick start
@@ -235,7 +235,7 @@ Note, that reading single register is quite a slow operation,
 since one first constructs and sends a packet, and then parses 
 output for response. 
 Reading single registers is not recommended for reading sensor data,
-since it might happen, that data from sensor axis come from different measurements.
+since it might happen, that data from different sensor registers come from different measurements.
 We strongly advice to use broadcast messages for reading sensor and fusion data.
 
 ## UM7 Data Packets
