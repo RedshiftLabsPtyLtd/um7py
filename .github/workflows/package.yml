@@ -44,3 +44,4 @@ jobs:
       uses: pypa/gh-action-pypi-publish@master
       with:
         password: ${{ secrets.pypi_token }}
+      if: matrix.python-version == 3.7
