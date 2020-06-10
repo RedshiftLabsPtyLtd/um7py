@@ -124,12 +124,12 @@ class RslSvdParser:
 
     @staticmethod
     def find_main_register_xml_root_in_svd(parsed_xml_tree_root: ET.Element) -> ET.Element:
-        main_register_map_peripheral = parsed_xml_tree_root.find('.//peripheral/[name="UM7_MAIN_REGISTER_MAP"]')
+        main_register_map_peripheral = parsed_xml_tree_root.find('.//peripheral/[name="MAIN_REGISTER_MAP"]')
         return main_register_map_peripheral.findall('.//register')
 
     @staticmethod
     def find_hidden_register_xml_root_in_svd(parsed_xml_tree_root: ET.Element) -> ET.Element:
-        hidden_register_map_peripheral = parsed_xml_tree_root.find('.//peripheral/[name="UM7_HIDDEN_REGISTER_MAP"]')
+        hidden_register_map_peripheral = parsed_xml_tree_root.find('.//peripheral/[name="HIDDEN_REGISTER_MAP"]')
         return hidden_register_map_peripheral.findall('.//register')
 
     def find_cregs_in_svd(self) -> Tuple[Any, ...]:
