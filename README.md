@@ -112,6 +112,8 @@ pip install um7py
 (ii) `pyudev` (for Linux),
 (iii) `dataclasses` (included in standard library since `python3.7`, needs to be installed for `3.6`).
 
+If you want to use SPI: if using on Linux and use SPI bus directly, install `spidev`,
+otherwise if using USB-ISS install `usb_iss` python package.
 
 ## Quick start
 
