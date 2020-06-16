@@ -187,7 +187,7 @@ class UM7Serial(UM7Registers):
     def find_response(self, reg_addr: int, hidden: bool = False, expected_length: int = 7) -> Tuple[bool, bytes]:
         while len(self.buffer) > 0:
             packet, self.buffer = self.find_packet(self.buffer)
-            if len(packet) < 4:
+            if len(packet) < 7:
                 return False, bytes()
             logging.debug(f"{packet}")
             logging.debug(f"addr: {packet[4]}")
@@ -253,7 +253,7 @@ class UM7Serial(UM7Registers):
                 # try to send <-> receive packets for a pre-defined time out time
                 self.send_recv(packet_to_send)
                 ok, sensor_reply = self.find_response(reg_addr, hidden, 11)
-                if ok and len(sensor_reply) > 7:
+                if ok:
                     logging.debug(f"packet: {sensor_reply}")
                     self.check_packet(sensor_reply)
                     ok, payload = self.get_payload(sensor_reply)
