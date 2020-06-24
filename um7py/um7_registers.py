@@ -2,13 +2,14 @@
 
 # Author: Dr. Konstantin Selyunin
 # License: MIT
-# Created: 2020.05.29
+# Created: 2020.06.24
 
+import logging
 import os.path
 import struct
 
 from abc import abstractmethod, ABC
-from typing import Union
+from typing import Union, Tuple
 
 from um7py.rsl_xml_svd.rsl_svd_parser import RslSvdParser
 
@@ -36,7 +37,6 @@ class UM7Registers(ABC):
     @abstractmethod
     def write_register(self, reg_addr: int, reg_value: Union[int, bytes, float], **kw):
         pass
-
 
     @property
     def creg_com_settings(self):
@@ -468,7 +468,7 @@ class UM7Registers(ABC):
         self.write_register(addr, new_value)
 
     @property
-    def creg_mag_1_cal1_2(self):
+    def creg_mag_cal1_2(self):
         """
         Row 1, Column 2 of magnetometer calibration matrix.
         Payload structure:
@@ -483,8 +483,8 @@ class UM7Registers(ABC):
         else:
             return None
 
-    @creg_mag_1_cal1_2.setter
-    def creg_mag_1_cal1_2(self, new_value):
+    @creg_mag_cal1_2.setter
+    def creg_mag_cal1_2(self, new_value):
         addr = 0x10
         self.write_register(addr, new_value)
 
@@ -622,7 +622,7 @@ class UM7Registers(ABC):
         [31:0]  : MAG_CAL3_3 -- 32-bit IEEE Floating Point Value
         :return:  MAG_CAL3_3 as float; 
         """
-        addr = 0x64
+        addr = 0x17
         ok, payload = self.read_register(addr)
         if ok:
             mag_cal3_3 = struct.unpack('>f', payload[0:4])
@@ -632,7 +632,7 @@ class UM7Registers(ABC):
 
     @creg_mag_cal3_3.setter
     def creg_mag_cal3_3(self, new_value):
-        addr = 0x64
+        addr = 0x17
         self.write_register(addr, new_value)
 
     @property
@@ -658,7 +658,7 @@ class UM7Registers(ABC):
         self.write_register(addr, new_value)
 
     @property
-    def creg_mag_1_bias_y(self):
+    def creg_mag_bias_y(self):
         """
         This register stores a bias term for the magnetometer y-axis for hard-iron calibration. This term can be
         computed by performing magnetometer calibration with the Redshift labs Serial Interface.
@@ -674,8 +674,8 @@ class UM7Registers(ABC):
         else:
             return None
 
-    @creg_mag_1_bias_y.setter
-    def creg_mag_1_bias_y(self, new_value):
+    @creg_mag_bias_y.setter
+    def creg_mag_bias_y(self, new_value):
         addr = 0x19
         self.write_register(addr, new_value)
 
@@ -982,10 +982,13 @@ class UM7Registers(ABC):
             reg = self.svd_parser.find_register_by(name='DREG_HEALTH')
             # find value for SATS_USED bit field
             sats_used_val = (payload_uint32 >> 26) & 0x003F
+            sats_used_enum = reg.find_field_by(name='SATS_USED').find_enum_entry_by(value=sats_used_val)
             # find value for HDOP bit field
             hdop_val = (payload_uint32 >> 16) & 0x03FF
+            hdop_enum = reg.find_field_by(name='HDOP').find_enum_entry_by(value=hdop_val)
             # find value for SATS_IN_VIEW bit field
             sats_in_view_val = (payload_uint32 >> 10) & 0x003F
+            sats_in_view_enum = reg.find_field_by(name='SATS_IN_VIEW').find_enum_entry_by(value=sats_in_view_val)
             # find value for OVF bit field
             ovf_val = (payload_uint32 >> 8) & 0x0001
             ovf_enum = reg.find_field_by(name='OVF').find_enum_entry_by(value=ovf_val)
@@ -1008,7 +1011,7 @@ class UM7Registers(ABC):
             gps_val = (payload_uint32 >> 0) & 0x0001
             gps_enum = reg.find_field_by(name='GPS').find_enum_entry_by(value=gps_val)
 
-            return sats_used_val, hdop_val, sats_in_view_val, ovf_enum, mg_n_enum, acc_n_enum, accel_enum, gyro_enum, mag_enum, gps_enum
+            return sats_used_enum, hdop_enum, sats_in_view_enum, ovf_enum, mg_n_enum, acc_n_enum, accel_enum, gyro_enum, mag_enum, gps_enum
         else:
             return None
 
