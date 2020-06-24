@@ -1420,7 +1420,7 @@
 
         <!-- CREG_MAG_CAL1_2: Row 1, Column 2 of magnetometer calibration matrix -->
         <register>
-          <name>CREG_MAG_1_CAL1_2</name>
+          <name>CREG_MAG_CAL1_2</name>
           <description>Row 1, Column 2 of magnetometer calibration matrix.</description>
           <address>0x10</address>
           <size>32</size>
@@ -1576,7 +1576,7 @@
         <register>
           <name>CREG_MAG_CAL3_3</name>
           <description>Row 3, Column 3 of magnetometer calibration matrix.</description>
-          <address>0x64</address>
+          <address>0x17</address>
           <size>32</size>
           <access>read-write</access>
           <resetValue>0x00000000</resetValue>
@@ -1618,7 +1618,7 @@
 
         <!-- CREG_MAG_BIAS_Y -->
         <register>
-          <name>CREG_MAG_1_BIAS_Y</name>
+          <name>CREG_MAG_BIAS_Y</name>
           <description>This register stores a bias term for the magnetometer y-axis for hard-iron calibration. This term can be computed by performing magnetometer calibration with the Redshift labs Serial Interface.</description>
           <address>0x19</address>
           <size>32</size>
