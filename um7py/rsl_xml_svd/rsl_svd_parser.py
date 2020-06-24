@@ -41,6 +41,8 @@ class Field:
         (prop, value), = kw.items()
         if len(kw) != 1 or prop not in ['name', 'value']:
             raise NotImplementedError(f"One pair is supported, with key either `name` or `value`, but given: {kw}!")
+        if self.enumerated_values is None or len(self.enumerated_values) == 0:
+            return value
         found_enum = next(filter(lambda x: getattr(x, prop) == value, self.enumerated_values), None)
         return found_enum
 
