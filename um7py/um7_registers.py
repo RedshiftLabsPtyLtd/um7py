@@ -25,6 +25,8 @@ class UM7Registers(ABC):
         for root, dirs, files in os.walk(parent_dir):
             if svd_file_name in files:
                 return os.path.join(root, svd_file_name)
+        else:
+            raise FileNotFoundError(f"No {svd_file_name} file found in {parent_dir}!")
 
     @abstractmethod
     def connect(self, *args, **kwargs):
