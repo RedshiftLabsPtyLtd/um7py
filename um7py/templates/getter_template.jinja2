@@ -13,6 +13,8 @@ def {{ register_name }}(self):
     ok, payload = self.read_register(addr, hidden=True)
     {%- endif %}
     if ok:
+        reg = self.svd_parser.find_register_by(name='{{ register_svd_name }}')
+        reg.raw_value, = struct.unpack('>I', payload[0:4])
 {{ interpreted_receive_fields }}
         return {{ return_values }}
     else:

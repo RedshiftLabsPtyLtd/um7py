@@ -71,6 +71,7 @@ class Register:
     access: str
     address: int
     fields: List[Field]
+    raw_value: int = 0
 
     def __repr__(self):
         return f"Register(name={self.name}, address={self.address}, access={self.access}, fields={self.fields})"
@@ -101,51 +102,46 @@ class Register:
                 fields_and_gaps[-1][el.name] += 1
         return fields_and_gaps
 
-
-@dataclass
-class RegisterEvaluation:
-    register: Register
-    raw_value: int = 0
+    @property
+    def field_names(self):
+        return [el.name for el in self.fields]
 
     def as_tuple(self) -> Tuple[EnumeratedValue]:
         return tuple(self.field_enum(el) for el in self.field_names)
 
+    def field_enum(self, name: str = '') -> EnumeratedValue:
+        field = self.find_field_by(name=name)
+        field_value = self.field_value(name)
+        return field.find_enum_entry_by(value=field_value)
+
     def from_tuple(self, fields: Tuple[EnumeratedValue]):
         raise NotImplementedError("Assigning from tuple is not implemented yet!")
 
-    @property
-    def field_names(self):
-        return [el.name for el in self.register.fields]
-
-    def field_enum(self, *a) -> EnumeratedValue:
-        field_name = a[0]
-        field = self.register.find_field_by(name=field_name)
-        field_value = self.field_value(field_name)
-        return field.find_enum_entry_by(value=field_value)
-
-    def find_field_by(self, name: str = ''):
-        return self.register.find_field_by(name=name)
-
-    def field_value(self, name: str = '') -> int:
-        field = self.register.find_field_by(name=name)
-        if field is None:
-            raise NotImplementedError(f"You provided field '{name}' for register {self.register.name}. "
-                                      f"This does not exist in register. Check the data sheet and provide correct name!")
-        bit_mask = self.set_bits_for_field(field)
-        field_value = self.raw_value & bit_mask
-        return field_value >> field.bit_range[1]
-
     def set_bits_for_field(self, field: Field) -> int:
         msb, lsb = field.bit_range
-        return RegisterEvaluation.set_bits_for_range(msb, lsb)
+        return Register.set_bits_for_range(msb, lsb)
 
     @staticmethod
     def set_bits_for_range(msb: int, lsb: int) -> int:
         return ((1 << lsb) - 1) ^ ((1 << (msb + 1)) - 1)
 
-    def set_field(self, **kw):
-        print(kw)
-        return self.raw_value | 0x01
+    def field_value(self, name: str = '') -> int:
+        field = self.find_field_by(name=name)
+        if field is None:
+            raise NotImplementedError(f"You provided field '{name}' for register {self.name}. "
+                                      f"Check the data sheet and provide correct name!")
+        bit_mask = self.set_bits_for_field(field)
+        field_value = self.raw_value & bit_mask
+        return field_value >> field.bit_range[1]
+
+    def set_field_value(self, **kw):
+        (prop, value), = kw.items()
+        if len(kw) != 1:
+            raise NotImplementedError(f"Only setting 1 property at a time is supported, but got: {kw}!")
+        field = self.find_field_by(name=prop)
+        msb, lsb = field.bit_range
+        bit_mask = 1 << (msb - lsb + 1) - 1
+        self.raw_value = (bit_mask & value) << lsb
 
 
 class RslSvdParser:

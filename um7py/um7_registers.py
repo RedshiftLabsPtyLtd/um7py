@@ -2,7 +2,7 @@
 
 # Author: Dr. Konstantin Selyunin
 # License: MIT
-# Created: 2020.06.24
+# Created: 2020.08.09
 
 import logging
 import os.path
@@ -25,8 +25,6 @@ class UM7Registers(ABC):
         for root, dirs, files in os.walk(parent_dir):
             if svd_file_name in files:
                 return os.path.join(root, svd_file_name)
-        else:
-            raise FileNotFoundError(f"No {svd_file_name} file found in {parent_dir}!")
 
     @abstractmethod
     def connect(self, *args, **kwargs):
@@ -55,22 +53,22 @@ class UM7Registers(ABC):
         addr = 0x00
         ok, payload = self.read_register(addr)
         if ok:
-            payload_uint32, = struct.unpack('>I', payload[0:4])
             reg = self.svd_parser.find_register_by(name='CREG_COM_SETTINGS')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             # find value for BAUD_RATE bit field
-            baud_rate_val = (payload_uint32 >> 28) & 0x000F
+            baud_rate_val = (reg.raw_value >> 28) & 0x000F
             baud_rate_enum = reg.find_field_by(name='BAUD_RATE').find_enum_entry_by(value=baud_rate_val)
             # find value for GPS_BAUD bit field
-            gps_baud_val = (payload_uint32 >> 24) & 0x000F
+            gps_baud_val = (reg.raw_value >> 24) & 0x000F
             gps_baud_enum = reg.find_field_by(name='GPS_BAUD').find_enum_entry_by(value=gps_baud_val)
             # find value for GPS bit field
-            gps_val = (payload_uint32 >> 8) & 0x0001
+            gps_val = (reg.raw_value >> 8) & 0x0001
             gps_enum = reg.find_field_by(name='GPS').find_enum_entry_by(value=gps_val)
             # find value for SAT bit field
-            sat_val = (payload_uint32 >> 4) & 0x0001
+            sat_val = (reg.raw_value >> 4) & 0x0001
             sat_enum = reg.find_field_by(name='SAT').find_enum_entry_by(value=sat_val)
 
-            return baud_rate_enum, gps_baud_enum, gps_enum, sat_enum
+            return reg, baud_rate_enum, gps_baud_enum, gps_enum, sat_enum
         else:
             return None
 
@@ -93,8 +91,10 @@ class UM7Registers(ABC):
         addr = 0x01
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_COM_RATES1')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             raw_accel_rate, raw_gyro_rate, raw_mag_rate = struct.unpack('>BBBx', payload[0:4])
-            return raw_accel_rate, raw_gyro_rate, raw_mag_rate
+            return reg, raw_accel_rate, raw_gyro_rate, raw_mag_rate
         else:
             return None
 
@@ -116,8 +116,10 @@ class UM7Registers(ABC):
         addr = 0x02
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_COM_RATES2')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             temp_rate, all_raw_rate = struct.unpack('>BxxB', payload[0:4])
-            return temp_rate, all_raw_rate
+            return reg, temp_rate, all_raw_rate
         else:
             return None
 
@@ -140,8 +142,10 @@ class UM7Registers(ABC):
         addr = 0x03
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_COM_RATES3')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             proc_accel_rate, proc_gyro_rate, proc_mag_rate = struct.unpack('>BBBx', payload[0:4])
-            return proc_accel_rate, proc_gyro_rate, proc_mag_rate
+            return reg, proc_accel_rate, proc_gyro_rate, proc_mag_rate
         else:
             return None
 
@@ -162,8 +166,10 @@ class UM7Registers(ABC):
         addr = 0x04
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_COM_RATES4')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             all_proc_rate = struct.unpack('>xxxB', payload[0:4])
-            return all_proc_rate
+            return reg, all_proc_rate
         else:
             return None
 
@@ -187,8 +193,10 @@ class UM7Registers(ABC):
         addr = 0x05
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_COM_RATES5')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             quat_rate, euler_rate, position_rate, velocity_rate = struct.unpack('>BBBB', payload[0:4])
-            return quat_rate, euler_rate, position_rate, velocity_rate
+            return reg, quat_rate, euler_rate, position_rate, velocity_rate
         else:
             return None
 
@@ -212,14 +220,14 @@ class UM7Registers(ABC):
         addr = 0x06
         ok, payload = self.read_register(addr)
         if ok:
-            pose_rate, gyro_bias_rate = struct.unpack('>BxBx', payload[0:4])
-            payload_uint32, = struct.unpack('>I', payload[0:4])
             reg = self.svd_parser.find_register_by(name='CREG_COM_RATES6')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
+            pose_rate, gyro_bias_rate = struct.unpack('>BxBx', payload[0:4])
             # find value for HEALTH_RATE bit field
-            health_rate_val = (payload_uint32 >> 16) & 0x000F
+            health_rate_val = (reg.raw_value >> 16) & 0x000F
             health_rate_enum = reg.find_field_by(name='HEALTH_RATE').find_enum_entry_by(value=health_rate_val)
 
-            return pose_rate, gyro_bias_rate, health_rate_enum
+            return reg, pose_rate, gyro_bias_rate, reg, health_rate_enum
         else:
             return None
 
@@ -245,31 +253,31 @@ class UM7Registers(ABC):
         addr = 0x07
         ok, payload = self.read_register(addr)
         if ok:
-            payload_uint32, = struct.unpack('>I', payload[0:4])
             reg = self.svd_parser.find_register_by(name='CREG_COM_RATES7')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             # find value for NMEA_HEALTH_RATE bit field
-            nmea_health_rate_val = (payload_uint32 >> 28) & 0x000F
+            nmea_health_rate_val = (reg.raw_value >> 28) & 0x000F
             nmea_health_rate_enum = reg.find_field_by(name='NMEA_HEALTH_RATE').find_enum_entry_by(value=nmea_health_rate_val)
             # find value for NMEA_POSE_RATE bit field
-            nmea_pose_rate_val = (payload_uint32 >> 24) & 0x000F
+            nmea_pose_rate_val = (reg.raw_value >> 24) & 0x000F
             nmea_pose_rate_enum = reg.find_field_by(name='NMEA_POSE_RATE').find_enum_entry_by(value=nmea_pose_rate_val)
             # find value for NMEA_ATTITUDE_RATE bit field
-            nmea_attitude_rate_val = (payload_uint32 >> 20) & 0x000F
+            nmea_attitude_rate_val = (reg.raw_value >> 20) & 0x000F
             nmea_attitude_rate_enum = reg.find_field_by(name='NMEA_ATTITUDE_RATE').find_enum_entry_by(value=nmea_attitude_rate_val)
             # find value for NMEA_SENSOR_RATE bit field
-            nmea_sensor_rate_val = (payload_uint32 >> 16) & 0x000F
+            nmea_sensor_rate_val = (reg.raw_value >> 16) & 0x000F
             nmea_sensor_rate_enum = reg.find_field_by(name='NMEA_SENSOR_RATE').find_enum_entry_by(value=nmea_sensor_rate_val)
             # find value for NMEA_RATES_RATE bit field
-            nmea_rates_rate_val = (payload_uint32 >> 12) & 0x000F
+            nmea_rates_rate_val = (reg.raw_value >> 12) & 0x000F
             nmea_rates_rate_enum = reg.find_field_by(name='NMEA_RATES_RATE').find_enum_entry_by(value=nmea_rates_rate_val)
             # find value for NMEA_GPS_POSE_RATE bit field
-            nmea_gps_pose_rate_val = (payload_uint32 >> 8) & 0x000F
+            nmea_gps_pose_rate_val = (reg.raw_value >> 8) & 0x000F
             nmea_gps_pose_rate_enum = reg.find_field_by(name='NMEA_GPS_POSE_RATE').find_enum_entry_by(value=nmea_gps_pose_rate_val)
             # find value for NMEA_QUAT_RATE bit field
-            nmea_quat_rate_val = (payload_uint32 >> 4) & 0x000F
+            nmea_quat_rate_val = (reg.raw_value >> 4) & 0x000F
             nmea_quat_rate_enum = reg.find_field_by(name='NMEA_QUAT_RATE').find_enum_entry_by(value=nmea_quat_rate_val)
 
-            return nmea_health_rate_enum, nmea_pose_rate_enum, nmea_attitude_rate_enum, nmea_sensor_rate_enum, nmea_rates_rate_enum, nmea_gps_pose_rate_enum, nmea_quat_rate_enum
+            return reg, nmea_health_rate_enum, nmea_pose_rate_enum, nmea_attitude_rate_enum, nmea_sensor_rate_enum, nmea_rates_rate_enum, nmea_gps_pose_rate_enum, nmea_quat_rate_enum
         else:
             return None
 
@@ -292,22 +300,22 @@ class UM7Registers(ABC):
         addr = 0x08
         ok, payload = self.read_register(addr)
         if ok:
-            payload_uint32, = struct.unpack('>I', payload[0:4])
             reg = self.svd_parser.find_register_by(name='CREG_MISC_SETTINGS')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             # find value for PPS bit field
-            pps_val = (payload_uint32 >> 8) & 0x0001
+            pps_val = (reg.raw_value >> 8) & 0x0001
             pps_enum = reg.find_field_by(name='PPS').find_enum_entry_by(value=pps_val)
             # find value for ZG bit field
-            zg_val = (payload_uint32 >> 2) & 0x0001
+            zg_val = (reg.raw_value >> 2) & 0x0001
             zg_enum = reg.find_field_by(name='ZG').find_enum_entry_by(value=zg_val)
             # find value for Q bit field
-            q_val = (payload_uint32 >> 1) & 0x0001
+            q_val = (reg.raw_value >> 1) & 0x0001
             q_enum = reg.find_field_by(name='Q').find_enum_entry_by(value=q_val)
             # find value for MAG bit field
-            mag_val = (payload_uint32 >> 0) & 0x0001
+            mag_val = (reg.raw_value >> 0) & 0x0001
             mag_enum = reg.find_field_by(name='MAG').find_enum_entry_by(value=mag_val)
 
-            return pps_enum, zg_enum, q_enum, mag_enum
+            return reg, pps_enum, zg_enum, q_enum, mag_enum
         else:
             return None
 
@@ -328,8 +336,10 @@ class UM7Registers(ABC):
         addr = 0x09
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_HOME_NORTH')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             set_home_north = struct.unpack('>f', payload[0:4])
-            return set_home_north
+            return reg, set_home_north
         else:
             return None
 
@@ -350,8 +360,10 @@ class UM7Registers(ABC):
         addr = 0x0A
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_HOME_EAST')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             set_home_east = struct.unpack('>f', payload[0:4])
-            return set_home_east
+            return reg, set_home_east
         else:
             return None
 
@@ -372,8 +384,10 @@ class UM7Registers(ABC):
         addr = 0x0B
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_HOME_UP')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             set_home_up = struct.unpack('>f', payload[0:4])
-            return set_home_up
+            return reg, set_home_up
         else:
             return None
 
@@ -394,8 +408,10 @@ class UM7Registers(ABC):
         addr = 0x0C
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_GYRO_TRIM_X')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gyro_trim_x = struct.unpack('>f', payload[0:4])
-            return gyro_trim_x
+            return reg, gyro_trim_x
         else:
             return None
 
@@ -416,8 +432,10 @@ class UM7Registers(ABC):
         addr = 0x0D
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_GYRO_TRIM_Y')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gyro_trim_y = struct.unpack('>f', payload[0:4])
-            return gyro_trim_y
+            return reg, gyro_trim_y
         else:
             return None
 
@@ -438,8 +456,10 @@ class UM7Registers(ABC):
         addr = 0x0E
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_GYRO_TRIM_Z')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gyro_trim_z = struct.unpack('>f', payload[0:4])
-            return gyro_trim_z
+            return reg, gyro_trim_z
         else:
             return None
 
@@ -459,8 +479,10 @@ class UM7Registers(ABC):
         addr = 0x0F
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_MAG_CAL1_1')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_cal1_1 = struct.unpack('>f', payload[0:4])
-            return mag_cal1_1
+            return reg, mag_cal1_1
         else:
             return None
 
@@ -480,8 +502,10 @@ class UM7Registers(ABC):
         addr = 0x10
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_MAG_CAL1_2')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_cal1_2 = struct.unpack('>f', payload[0:4])
-            return mag_cal1_2
+            return reg, mag_cal1_2
         else:
             return None
 
@@ -501,8 +525,10 @@ class UM7Registers(ABC):
         addr = 0x11
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_MAG_CAL1_3')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_cal1_3 = struct.unpack('>f', payload[0:4])
-            return mag_cal1_3
+            return reg, mag_cal1_3
         else:
             return None
 
@@ -522,8 +548,10 @@ class UM7Registers(ABC):
         addr = 0x12
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_MAG_CAL2_1')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_cal2_1 = struct.unpack('>f', payload[0:4])
-            return mag_cal2_1
+            return reg, mag_cal2_1
         else:
             return None
 
@@ -543,8 +571,10 @@ class UM7Registers(ABC):
         addr = 0x13
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_MAG_CAL2_2')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_cal2_2 = struct.unpack('>f', payload[0:4])
-            return mag_cal2_2
+            return reg, mag_cal2_2
         else:
             return None
 
@@ -564,8 +594,10 @@ class UM7Registers(ABC):
         addr = 0x14
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_MAG_CAL2_3')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_cal2_3 = struct.unpack('>f', payload[0:4])
-            return mag_cal2_3
+            return reg, mag_cal2_3
         else:
             return None
 
@@ -585,8 +617,10 @@ class UM7Registers(ABC):
         addr = 0x15
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_MAG_CAL3_1')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_cal3_1 = struct.unpack('>f', payload[0:4])
-            return mag_cal3_1
+            return reg, mag_cal3_1
         else:
             return None
 
@@ -606,8 +640,10 @@ class UM7Registers(ABC):
         addr = 0x16
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_MAG_CAL3_2')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_cal3_2 = struct.unpack('>f', payload[0:4])
-            return mag_cal3_2
+            return reg, mag_cal3_2
         else:
             return None
 
@@ -627,8 +663,10 @@ class UM7Registers(ABC):
         addr = 0x17
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_MAG_CAL3_3')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_cal3_3 = struct.unpack('>f', payload[0:4])
-            return mag_cal3_3
+            return reg, mag_cal3_3
         else:
             return None
 
@@ -649,8 +687,10 @@ class UM7Registers(ABC):
         addr = 0x18
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_MAG_BIAS_X')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_bias_x = struct.unpack('>f', payload[0:4])
-            return mag_bias_x
+            return reg, mag_bias_x
         else:
             return None
 
@@ -671,8 +711,10 @@ class UM7Registers(ABC):
         addr = 0x19
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_MAG_BIAS_Y')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_bias_y = struct.unpack('>f', payload[0:4])
-            return mag_bias_y
+            return reg, mag_bias_y
         else:
             return None
 
@@ -693,8 +735,10 @@ class UM7Registers(ABC):
         addr = 0x1A
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_MAG_BIAS_Z')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_bias_z = struct.unpack('>f', payload[0:4])
-            return mag_bias_z
+            return reg, mag_bias_z
         else:
             return None
 
@@ -714,8 +758,10 @@ class UM7Registers(ABC):
         addr = 0x1B
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_ACCEL_CAL1_1')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_cal1_1 = struct.unpack('>f', payload[0:4])
-            return accel_cal1_1
+            return reg, accel_cal1_1
         else:
             return None
 
@@ -735,8 +781,10 @@ class UM7Registers(ABC):
         addr = 0x1C
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_ACCEL_CAL1_2')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_cal1_2 = struct.unpack('>f', payload[0:4])
-            return accel_cal1_2
+            return reg, accel_cal1_2
         else:
             return None
 
@@ -756,8 +804,10 @@ class UM7Registers(ABC):
         addr = 0x1D
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_ACCEL_CAL1_3')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_cal1_3 = struct.unpack('>f', payload[0:4])
-            return accel_cal1_3
+            return reg, accel_cal1_3
         else:
             return None
 
@@ -777,8 +827,10 @@ class UM7Registers(ABC):
         addr = 0x1E
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_ACCEL_CAL2_1')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_cal2_1 = struct.unpack('>f', payload[0:4])
-            return accel_cal2_1
+            return reg, accel_cal2_1
         else:
             return None
 
@@ -798,8 +850,10 @@ class UM7Registers(ABC):
         addr = 0x1F
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_ACCEL_CAL2_2')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_cal2_2 = struct.unpack('>f', payload[0:4])
-            return accel_cal2_2
+            return reg, accel_cal2_2
         else:
             return None
 
@@ -819,8 +873,10 @@ class UM7Registers(ABC):
         addr = 0x20
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_ACCEL_CAL2_3')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_cal2_3 = struct.unpack('>f', payload[0:4])
-            return accel_cal2_3
+            return reg, accel_cal2_3
         else:
             return None
 
@@ -840,8 +896,10 @@ class UM7Registers(ABC):
         addr = 0x21
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_ACCEL_CAL3_1')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_cal3_1 = struct.unpack('>f', payload[0:4])
-            return accel_cal3_1
+            return reg, accel_cal3_1
         else:
             return None
 
@@ -861,8 +919,10 @@ class UM7Registers(ABC):
         addr = 0x22
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_ACCEL_CAL3_2')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_cal3_2 = struct.unpack('>f', payload[0:4])
-            return accel_cal3_2
+            return reg, accel_cal3_2
         else:
             return None
 
@@ -882,8 +942,10 @@ class UM7Registers(ABC):
         addr = 0x23
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_ACCEL_CAL3_3')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_cal3_3 = struct.unpack('>f', payload[0:4])
-            return accel_cal3_3
+            return reg, accel_cal3_3
         else:
             return None
 
@@ -904,8 +966,10 @@ class UM7Registers(ABC):
         addr = 0x24
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_ACCEL_BIAS_X')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_bias_x = struct.unpack('>f', payload[0:4])
-            return accel_bias_x
+            return reg, accel_bias_x
         else:
             return None
 
@@ -926,8 +990,10 @@ class UM7Registers(ABC):
         addr = 0x25
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_ACCEL_BIAS_Y')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_bias_y = struct.unpack('>f', payload[0:4])
-            return accel_bias_y
+            return reg, accel_bias_y
         else:
             return None
 
@@ -948,8 +1014,10 @@ class UM7Registers(ABC):
         addr = 0x26
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='CREG_ACCEL_BIAS_Z')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_bias_z = struct.unpack('>f', payload[0:4])
-            return accel_bias_z
+            return reg, accel_bias_z
         else:
             return None
 
@@ -980,40 +1048,40 @@ class UM7Registers(ABC):
         addr = 0x55
         ok, payload = self.read_register(addr)
         if ok:
-            payload_uint32, = struct.unpack('>I', payload[0:4])
             reg = self.svd_parser.find_register_by(name='DREG_HEALTH')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             # find value for SATS_USED bit field
-            sats_used_val = (payload_uint32 >> 26) & 0x003F
+            sats_used_val = (reg.raw_value >> 26) & 0x003F
             sats_used_enum = reg.find_field_by(name='SATS_USED').find_enum_entry_by(value=sats_used_val)
             # find value for HDOP bit field
-            hdop_val = (payload_uint32 >> 16) & 0x03FF
+            hdop_val = (reg.raw_value >> 16) & 0x03FF
             hdop_enum = reg.find_field_by(name='HDOP').find_enum_entry_by(value=hdop_val)
             # find value for SATS_IN_VIEW bit field
-            sats_in_view_val = (payload_uint32 >> 10) & 0x003F
+            sats_in_view_val = (reg.raw_value >> 10) & 0x003F
             sats_in_view_enum = reg.find_field_by(name='SATS_IN_VIEW').find_enum_entry_by(value=sats_in_view_val)
             # find value for OVF bit field
-            ovf_val = (payload_uint32 >> 8) & 0x0001
+            ovf_val = (reg.raw_value >> 8) & 0x0001
             ovf_enum = reg.find_field_by(name='OVF').find_enum_entry_by(value=ovf_val)
             # find value for MG_N bit field
-            mg_n_val = (payload_uint32 >> 5) & 0x0001
+            mg_n_val = (reg.raw_value >> 5) & 0x0001
             mg_n_enum = reg.find_field_by(name='MG_N').find_enum_entry_by(value=mg_n_val)
             # find value for ACC_N bit field
-            acc_n_val = (payload_uint32 >> 4) & 0x0001
+            acc_n_val = (reg.raw_value >> 4) & 0x0001
             acc_n_enum = reg.find_field_by(name='ACC_N').find_enum_entry_by(value=acc_n_val)
             # find value for ACCEL bit field
-            accel_val = (payload_uint32 >> 3) & 0x0001
+            accel_val = (reg.raw_value >> 3) & 0x0001
             accel_enum = reg.find_field_by(name='ACCEL').find_enum_entry_by(value=accel_val)
             # find value for GYRO bit field
-            gyro_val = (payload_uint32 >> 2) & 0x0001
+            gyro_val = (reg.raw_value >> 2) & 0x0001
             gyro_enum = reg.find_field_by(name='GYRO').find_enum_entry_by(value=gyro_val)
             # find value for MAG bit field
-            mag_val = (payload_uint32 >> 1) & 0x0001
+            mag_val = (reg.raw_value >> 1) & 0x0001
             mag_enum = reg.find_field_by(name='MAG').find_enum_entry_by(value=mag_val)
             # find value for GPS bit field
-            gps_val = (payload_uint32 >> 0) & 0x0001
+            gps_val = (reg.raw_value >> 0) & 0x0001
             gps_enum = reg.find_field_by(name='GPS').find_enum_entry_by(value=gps_val)
 
-            return sats_used_enum, hdop_enum, sats_in_view_enum, ovf_enum, mg_n_enum, acc_n_enum, accel_enum, gyro_enum, mag_enum, gps_enum
+            return reg, sats_used_enum, hdop_enum, sats_in_view_enum, ovf_enum, mg_n_enum, acc_n_enum, accel_enum, gyro_enum, mag_enum, gps_enum
         else:
             return None
 
@@ -1029,8 +1097,10 @@ class UM7Registers(ABC):
         addr = 0x56
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GYRO_RAW_XY')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gyro_raw_x, gyro_raw_y = struct.unpack('>hh', payload[0:4])
-            return gyro_raw_x, gyro_raw_y
+            return reg, gyro_raw_x, gyro_raw_y
         else:
             return None
 
@@ -1045,8 +1115,10 @@ class UM7Registers(ABC):
         addr = 0x57
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GYRO_RAW_Z')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gyro_raw_z = struct.unpack('>hxx', payload[0:4])
-            return gyro_raw_z
+            return reg, gyro_raw_z
         else:
             return None
 
@@ -1061,8 +1133,10 @@ class UM7Registers(ABC):
         addr = 0x58
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GYRO_RAW_TIME')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gyro_raw_time = struct.unpack('>f', payload[0:4])
-            return gyro_raw_time
+            return reg, gyro_raw_time
         else:
             return None
 
@@ -1078,8 +1152,10 @@ class UM7Registers(ABC):
         addr = 0x59
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_ACCEL_RAW_XY')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_raw_x, accel_raw_y = struct.unpack('>hh', payload[0:4])
-            return accel_raw_x, accel_raw_y
+            return reg, accel_raw_x, accel_raw_y
         else:
             return None
 
@@ -1094,8 +1170,10 @@ class UM7Registers(ABC):
         addr = 0x5A
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_ACCEL_RAW_Z')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_raw_z = struct.unpack('>hxx', payload[0:4])
-            return accel_raw_z
+            return reg, accel_raw_z
         else:
             return None
 
@@ -1110,8 +1188,10 @@ class UM7Registers(ABC):
         addr = 0x5B
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_ACCEL_RAW_TIME')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_raw_time = struct.unpack('>f', payload[0:4])
-            return accel_raw_time
+            return reg, accel_raw_time
         else:
             return None
 
@@ -1127,8 +1207,10 @@ class UM7Registers(ABC):
         addr = 0x5C
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_MAG_RAW_XY')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_raw_x, mag_raw_y = struct.unpack('>hh', payload[0:4])
-            return mag_raw_x, mag_raw_y
+            return reg, mag_raw_x, mag_raw_y
         else:
             return None
 
@@ -1143,8 +1225,10 @@ class UM7Registers(ABC):
         addr = 0x5D
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_MAG_RAW_Z')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_raw_z = struct.unpack('>hxx', payload[0:4])
-            return mag_raw_z
+            return reg, mag_raw_z
         else:
             return None
 
@@ -1159,8 +1243,10 @@ class UM7Registers(ABC):
         addr = 0x5E
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_MAG_RAW_TIME')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_raw_time = struct.unpack('>f', payload[0:4])
-            return mag_raw_time
+            return reg, mag_raw_time
         else:
             return None
 
@@ -1175,8 +1261,10 @@ class UM7Registers(ABC):
         addr = 0x5F
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_TEMPERATURE')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             temperature = struct.unpack('>f', payload[0:4])
-            return temperature
+            return reg, temperature
         else:
             return None
 
@@ -1191,8 +1279,10 @@ class UM7Registers(ABC):
         addr = 0x60
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_TEMPERATURE_TIME')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             temperature_time = struct.unpack('>f', payload[0:4])
-            return temperature_time
+            return reg, temperature_time
         else:
             return None
 
@@ -1208,8 +1298,10 @@ class UM7Registers(ABC):
         addr = 0x61
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GYRO_PROC_X')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gyro_proc_x = struct.unpack('>f', payload[0:4])
-            return gyro_proc_x
+            return reg, gyro_proc_x
         else:
             return None
 
@@ -1225,8 +1317,10 @@ class UM7Registers(ABC):
         addr = 0x62
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GYRO_PROC_Y')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gyro_proc_y = struct.unpack('>f', payload[0:4])
-            return gyro_proc_y
+            return reg, gyro_proc_y
         else:
             return None
 
@@ -1242,8 +1336,10 @@ class UM7Registers(ABC):
         addr = 0x63
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GYRO_PROC_Z')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gyro_proc_z = struct.unpack('>f', payload[0:4])
-            return gyro_proc_z
+            return reg, gyro_proc_z
         else:
             return None
 
@@ -1258,8 +1354,10 @@ class UM7Registers(ABC):
         addr = 0x64
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GYRO_PROC_TIME')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gyro_proc_time = struct.unpack('>f', payload[0:4])
-            return gyro_proc_time
+            return reg, gyro_proc_time
         else:
             return None
 
@@ -1275,8 +1373,10 @@ class UM7Registers(ABC):
         addr = 0x65
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_ACCEL_PROC_X')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_proc_x = struct.unpack('>f', payload[0:4])
-            return accel_proc_x
+            return reg, accel_proc_x
         else:
             return None
 
@@ -1292,8 +1392,10 @@ class UM7Registers(ABC):
         addr = 0x66
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_ACCEL_PROC_Y')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_proc_y = struct.unpack('>f', payload[0:4])
-            return accel_proc_y
+            return reg, accel_proc_y
         else:
             return None
 
@@ -1309,8 +1411,10 @@ class UM7Registers(ABC):
         addr = 0x67
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_ACCEL_PROC_Z')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_proc_z = struct.unpack('>f', payload[0:4])
-            return accel_proc_z
+            return reg, accel_proc_z
         else:
             return None
 
@@ -1325,8 +1429,10 @@ class UM7Registers(ABC):
         addr = 0x68
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_ACCEL_PROC_TIME')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_proc_time = struct.unpack('>f', payload[0:4])
-            return accel_proc_time
+            return reg, accel_proc_time
         else:
             return None
 
@@ -1342,8 +1448,10 @@ class UM7Registers(ABC):
         addr = 0x69
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_MAG_PROC_X')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_proc_x = struct.unpack('>f', payload[0:4])
-            return mag_proc_x
+            return reg, mag_proc_x
         else:
             return None
 
@@ -1359,8 +1467,10 @@ class UM7Registers(ABC):
         addr = 0x6A
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_MAG_PROC_Y')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_proc_y = struct.unpack('>f', payload[0:4])
-            return mag_proc_y
+            return reg, mag_proc_y
         else:
             return None
 
@@ -1376,8 +1486,10 @@ class UM7Registers(ABC):
         addr = 0x6B
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_MAG_PROC_Z')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_proc_z = struct.unpack('>f', payload[0:4])
-            return mag_proc_z
+            return reg, mag_proc_z
         else:
             return None
 
@@ -1392,8 +1504,10 @@ class UM7Registers(ABC):
         addr = 0x6C
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_MAG_PROC_TIME')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             mag_proc_time = struct.unpack('>f', payload[0:4])
-            return mag_proc_time
+            return reg, mag_proc_time
         else:
             return None
 
@@ -1409,8 +1523,10 @@ class UM7Registers(ABC):
         addr = 0x6D
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_QUAT_AB')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             quat_a, quat_b = struct.unpack('>hh', payload[0:4])
-            return quat_a, quat_b
+            return reg, quat_a, quat_b
         else:
             return None
 
@@ -1426,8 +1542,10 @@ class UM7Registers(ABC):
         addr = 0x6E
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_QUAT_CD')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             quat_c, quat_d = struct.unpack('>hh', payload[0:4])
-            return quat_c, quat_d
+            return reg, quat_c, quat_d
         else:
             return None
 
@@ -1442,8 +1560,10 @@ class UM7Registers(ABC):
         addr = 0x6F
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_QUAT_TIME')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             quat_time = struct.unpack('>f', payload[0:4])
-            return quat_time
+            return reg, quat_time
         else:
             return None
 
@@ -1459,8 +1579,10 @@ class UM7Registers(ABC):
         addr = 0x70
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_EULER_PHI_THETA')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             phi, theta = struct.unpack('>hh', payload[0:4])
-            return phi, theta
+            return reg, phi, theta
         else:
             return None
 
@@ -1475,8 +1597,10 @@ class UM7Registers(ABC):
         addr = 0x71
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_EULER_PSI')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             psi = struct.unpack('>hxx', payload[0:4])
-            return psi
+            return reg, psi
         else:
             return None
 
@@ -1492,8 +1616,10 @@ class UM7Registers(ABC):
         addr = 0x72
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_EULER_PHI_THETA_DOT')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             phi_dot, theta_dot = struct.unpack('>hh', payload[0:4])
-            return phi_dot, theta_dot
+            return reg, phi_dot, theta_dot
         else:
             return None
 
@@ -1508,8 +1634,10 @@ class UM7Registers(ABC):
         addr = 0x73
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_EULER_PSI_DOT')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             psi_dot = struct.unpack('>hxx', payload[0:4])
-            return psi_dot
+            return reg, psi_dot
         else:
             return None
 
@@ -1524,8 +1652,10 @@ class UM7Registers(ABC):
         addr = 0x74
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_EULER_TIME')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             euler_time = struct.unpack('>f', payload[0:4])
-            return euler_time
+            return reg, euler_time
         else:
             return None
 
@@ -1540,8 +1670,10 @@ class UM7Registers(ABC):
         addr = 0x75
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_POSITION_NORTH')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             position_north = struct.unpack('>f', payload[0:4])
-            return position_north
+            return reg, position_north
         else:
             return None
 
@@ -1556,8 +1688,10 @@ class UM7Registers(ABC):
         addr = 0x76
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_POSITION_EAST')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             position_east = struct.unpack('>f', payload[0:4])
-            return position_east
+            return reg, position_east
         else:
             return None
 
@@ -1572,8 +1706,10 @@ class UM7Registers(ABC):
         addr = 0x77
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_POSITION_UP')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             position_up = struct.unpack('>f', payload[0:4])
-            return position_up
+            return reg, position_up
         else:
             return None
 
@@ -1588,8 +1724,10 @@ class UM7Registers(ABC):
         addr = 0x78
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_POSITION_TIME')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             position_time = struct.unpack('>f', payload[0:4])
-            return position_time
+            return reg, position_time
         else:
             return None
 
@@ -1604,8 +1742,10 @@ class UM7Registers(ABC):
         addr = 0x79
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_VELOCITY_NORTH')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             velocity_north = struct.unpack('>f', payload[0:4])
-            return velocity_north
+            return reg, velocity_north
         else:
             return None
 
@@ -1620,8 +1760,10 @@ class UM7Registers(ABC):
         addr = 0x7A
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_VELOCITY_EAST')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             velocity_east = struct.unpack('>f', payload[0:4])
-            return velocity_east
+            return reg, velocity_east
         else:
             return None
 
@@ -1636,8 +1778,10 @@ class UM7Registers(ABC):
         addr = 0x7B
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_VELOCITY_UP')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             velocity_up = struct.unpack('>f', payload[0:4])
-            return velocity_up
+            return reg, velocity_up
         else:
             return None
 
@@ -1652,8 +1796,10 @@ class UM7Registers(ABC):
         addr = 0x7C
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_VELOCITY_TIME')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             velocity_time = struct.unpack('>f', payload[0:4])
-            return velocity_time
+            return reg, velocity_time
         else:
             return None
 
@@ -1668,8 +1814,10 @@ class UM7Registers(ABC):
         addr = 0x7D
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GPS_LATITUDE')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gps_latitude = struct.unpack('>f', payload[0:4])
-            return gps_latitude
+            return reg, gps_latitude
         else:
             return None
 
@@ -1684,8 +1832,10 @@ class UM7Registers(ABC):
         addr = 0x7E
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GPS_LONGITUDE')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gps_longitude = struct.unpack('>f', payload[0:4])
-            return gps_longitude
+            return reg, gps_longitude
         else:
             return None
 
@@ -1700,8 +1850,10 @@ class UM7Registers(ABC):
         addr = 0x7F
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GPS_ALTITUDE')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gps_altitude = struct.unpack('>f', payload[0:4])
-            return gps_altitude
+            return reg, gps_altitude
         else:
             return None
 
@@ -1716,8 +1868,10 @@ class UM7Registers(ABC):
         addr = 0x80
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GPS_COURSE')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gps_course = struct.unpack('>f', payload[0:4])
-            return gps_course
+            return reg, gps_course
         else:
             return None
 
@@ -1732,8 +1886,10 @@ class UM7Registers(ABC):
         addr = 0x81
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GPS_SPEED')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gps_speed = struct.unpack('>f', payload[0:4])
-            return gps_speed
+            return reg, gps_speed
         else:
             return None
 
@@ -1748,8 +1904,10 @@ class UM7Registers(ABC):
         addr = 0x82
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GPS_TIME')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gps_time = struct.unpack('>f', payload[0:4])
-            return gps_time
+            return reg, gps_time
         else:
             return None
 
@@ -1767,8 +1925,10 @@ class UM7Registers(ABC):
         addr = 0x83
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GPS_SAT_1_2')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             sat_1_id, sat_1_snr, sat_2_id, sat_2_snr = struct.unpack('>BBBB', payload[0:4])
-            return sat_1_id, sat_1_snr, sat_2_id, sat_2_snr
+            return reg, sat_1_id, sat_1_snr, sat_2_id, sat_2_snr
         else:
             return None
 
@@ -1786,8 +1946,10 @@ class UM7Registers(ABC):
         addr = 0x84
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GPS_SAT_3_4')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             sat_3_id, sat_3_snr, sat_4_id, sat_4_snr = struct.unpack('>BBBB', payload[0:4])
-            return sat_3_id, sat_3_snr, sat_4_id, sat_4_snr
+            return reg, sat_3_id, sat_3_snr, sat_4_id, sat_4_snr
         else:
             return None
 
@@ -1805,8 +1967,10 @@ class UM7Registers(ABC):
         addr = 0x85
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GPS_SAT_5_6')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             sat_5_id, sat_5_snr, sat_6_id, sat_6_snr = struct.unpack('>BBBB', payload[0:4])
-            return sat_5_id, sat_5_snr, sat_6_id, sat_6_snr
+            return reg, sat_5_id, sat_5_snr, sat_6_id, sat_6_snr
         else:
             return None
 
@@ -1824,8 +1988,10 @@ class UM7Registers(ABC):
         addr = 0x86
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GPS_SAT_7_8')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             sat_7_id, sat_7_snr, sat_8_id, sat_8_snr = struct.unpack('>BBBB', payload[0:4])
-            return sat_7_id, sat_7_snr, sat_8_id, sat_8_snr
+            return reg, sat_7_id, sat_7_snr, sat_8_id, sat_8_snr
         else:
             return None
 
@@ -1843,8 +2009,10 @@ class UM7Registers(ABC):
         addr = 0x87
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GPS_SAT_9_10')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             sat_9_id, sat_9_snr, sat_10_id, sat_10_snr = struct.unpack('>BBBB', payload[0:4])
-            return sat_9_id, sat_9_snr, sat_10_id, sat_10_snr
+            return reg, sat_9_id, sat_9_snr, sat_10_id, sat_10_snr
         else:
             return None
 
@@ -1862,8 +2030,10 @@ class UM7Registers(ABC):
         addr = 0x88
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GPS_SAT_11_12')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             sat_11_id, sat_11_snr, sat_12_id, sat_12_snr = struct.unpack('>BBBB', payload[0:4])
-            return sat_11_id, sat_11_snr, sat_12_id, sat_12_snr
+            return reg, sat_11_id, sat_11_snr, sat_12_id, sat_12_snr
         else:
             return None
 
@@ -1878,8 +2048,10 @@ class UM7Registers(ABC):
         addr = 0x89
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GYRO_BIAS_X')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gyro_bias_x = struct.unpack('>f', payload[0:4])
-            return gyro_bias_x
+            return reg, gyro_bias_x
         else:
             return None
 
@@ -1894,8 +2066,10 @@ class UM7Registers(ABC):
         addr = 0x8A
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GYRO_BIAS_Y')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gyro_bias_y = struct.unpack('>f', payload[0:4])
-            return gyro_bias_y
+            return reg, gyro_bias_y
         else:
             return None
 
@@ -1910,8 +2084,10 @@ class UM7Registers(ABC):
         addr = 0x8B
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='DREG_GYRO_BIAS_Z')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gyro_bias_z = struct.unpack('>f', payload[0:4])
-            return gyro_bias_z
+            return reg, gyro_bias_z
         else:
             return None
 
@@ -1927,6 +2103,8 @@ class UM7Registers(ABC):
         addr = 0xAA
         ok, payload = self.read_register(addr)
         if ok:
+            reg = self.svd_parser.find_register_by(name='GET_FW_REVISION')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             fw_revision = struct.unpack('>4s', payload[0:4])[0].decode('utf-8')
             return fw_revision
         else:
@@ -2007,8 +2185,10 @@ class UM7Registers(ABC):
         addr = 0x00
         ok, payload = self.read_register(addr, hidden=True)
         if ok:
+            reg = self.svd_parser.find_register_by(name='HIDDEN_GYRO_VARIANCE')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             gyro_variance = struct.unpack('>f', payload[0:4])
-            return gyro_variance
+            return reg, gyro_variance
         else:
             return None
 
@@ -2028,8 +2208,10 @@ class UM7Registers(ABC):
         addr = 0x01
         ok, payload = self.read_register(addr, hidden=True)
         if ok:
+            reg = self.svd_parser.find_register_by(name='HIDDEN_ACCEL_VARIANCE')
+            reg.raw_value, = struct.unpack('>I', payload[0:4])
             accel_variance = struct.unpack('>f', payload[0:4])
-            return accel_variance
+            return reg, accel_variance
         else:
             return None
 

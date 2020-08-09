@@ -94,15 +94,14 @@ class RslGenerator(RslSvdParser):
         return struct_fmt
 
     def interpret_bitfields(self, register: Register) -> Tuple[str, str]:
-        generated_code = "payload_uint32, = struct.unpack('>I', payload[0:4])\n"
-        generated_code += f"reg = self.svd_parser.find_register_by(name='{register.name}')\n"
-        return_vars = []
+        generated_code = ""
+        return_vars = ['reg']
         register_bitfields = [field for field in register.fields if field.data_type == 'bitField']
         for field in register_bitfields:
             generated_code += f"# find value for {field.name} bit field\n"
             bit_mask = 2 ** (field.bit_range[0] - field.bit_range[1] + 1) - 1
             field_value_var = f"{field.name.lower()}_val"
-            generated_code += f"{field_value_var} = (payload_uint32 >> {field.bit_range[1]}) & 0x{bit_mask:04X}\n"
+            generated_code += f"{field_value_var} = (reg.raw_value >> {field.bit_range[1]}) & 0x{bit_mask:04X}\n"
             return_var = f"{field.name.lower()}_enum"
             return_vars.append(return_var)
             generated_code += f"{return_var} = reg.find_field_by(name='{field.name}')"\
@@ -113,7 +112,7 @@ class RslGenerator(RslSvdParser):
         return_vars = tuple(field.name.lower() for field in register.fields if field.data_type != 'bitField')
         generated_code = ", ".join(return_vars) + \
                          f" = struct.unpack('{self.get_struct_fmt_for_register(register)}', payload[0:4])"
-        return ", ".join(return_vars), generated_code
+        return "reg, " + ", ".join(return_vars), generated_code
 
     def interpret_string_data(self, register: Register) -> Tuple[str, str]:
         return_vars = tuple(field.name.lower() for field in register.fields)
@@ -147,6 +146,7 @@ class RslGenerator(RslSvdParser):
         return_vars, generated_code = self.interpret_payload(register)
         params_dict = {
             'register_name': register.name.lower(),
+            'register_svd_name': register.name,
             'comment_short': textwrap.indent("\n".join(textwrap.wrap(register.description, 110)), ' ' * 4),
             'payload_structure_description': textwrap.indent(self.retrieve_payload_description(register), ' ' * 4),
             'return_field_description': self.retrieve_return_description(register),
