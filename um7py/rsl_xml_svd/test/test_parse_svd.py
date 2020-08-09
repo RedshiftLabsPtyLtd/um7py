@@ -7,7 +7,7 @@ import os.path
 from typing import Tuple
 
 import pytest
-from um7py.rsl_xml_svd.rsl_svd_parser import RslSvdParser, Register, Field, EnumeratedValue
+from um7py.rsl_xml_svd.rsl_svd_parser import RslSvdParser, Register, Field, EnumeratedValue, RegisterEvaluation
 
 
 @pytest.fixture
@@ -151,3 +151,42 @@ def test_hidden_find(rsl_svd_parser: RslSvdParser):
 
     hidden_accel_variance = rsl_svd_parser.find_hidden_register_by(name='HIDDEN_ACCEL_VARIANCE')
     assert hidden_accel_variance.address == 1, "Hidden register name and address mismatch!"
+
+
+@pytest.mark.svd
+def test_register_evaluation_creation(rsl_svd_parser: RslSvdParser):
+    creg_com_settings_reg: Register = rsl_svd_parser.find_register_by(name='CREG_COM_SETTINGS')
+    creg_com_settings_eval = RegisterEvaluation(register=creg_com_settings_reg, raw_value=0)
+    assert creg_com_settings_eval.raw_value == 0, f"Creation of Register Evaluation Failed!"
+
+
+@pytest.mark.svd
+def test_register_evaluation_fields(rsl_svd_parser: RslSvdParser):
+    creg_com_settings_reg: Register = rsl_svd_parser.find_register_by(name='CREG_COM_SETTINGS')
+    creg_com_settings_eval = RegisterEvaluation(register=creg_com_settings_reg)
+    fields = creg_com_settings_eval.field_names
+    assert 'BAUD_RATE' in fields, f"Field names for CREG_COM_SETTINGS are incorrect!"
+    assert 'GPS_BAUD' in fields, f"Field names for CREG_COM_SETTINGS are incorrect!"
+
+
+@pytest.mark.svd
+def test_set_bitmask(rsl_svd_parser: RslSvdParser):
+    creg_com_settings_reg: Register = rsl_svd_parser.find_register_by(name='CREG_COM_SETTINGS')
+    creg_com_settings_eval = RegisterEvaluation(register=creg_com_settings_reg)
+    field = creg_com_settings_eval.find_field_by(name='BAUD_RATE')
+    bit_mask_1 = creg_com_settings_eval.set_bits_for_range(8, 8)
+    assert bit_mask_1 == 1 << 8, f"Expected bit mask: {1<<8}, got {bit_mask_1}"
+    bit_mask_2 = creg_com_settings_eval.set_bits_for_range(7, 0)
+    assert bit_mask_2 == (1 << 8) - 1, f"Expected bit mask: {(1 << 8) - 1}, got {bit_mask_2}"
+    bit_mask_3 = creg_com_settings_eval.set_bits_for_range(31, 28)
+    expected_bit_mask_3 = 1 << 31 | 1 << 30 | 1 << 29 | 1 << 28
+    assert bit_mask_3 == expected_bit_mask_3, f"Expected bit mask: {expected_bit_mask_3}, got: {bit_mask_3}"
+    bit_mask_4 = creg_com_settings_eval.set_bits_for_field(field)
+    assert bit_mask_4 == bit_mask_3, f"Bit mask for the field: {field} is not equal to mask: {bit_mask_3}"
+
+
+@pytest.mark.svd
+def test_register_evaluation_as_tuple(rsl_svd_parser: RslSvdParser):
+    pass
+
+

@@ -48,7 +48,7 @@ def test_get_struct_fmt_for_register_one_short(rsl_generator: RslGenerator):
     reg = rsl_generator.find_register_by(name='DREG_GYRO_RAW_Z')
     ret = rsl_generator.get_struct_fmt_for_register(reg)
     print(ret)
-    assert ret == '>hxx', "Interpretted field is incorrect!"
+    assert ret == '>hxx', "Interpreted field is incorrect!"
 
 
 @pytest.mark.gen

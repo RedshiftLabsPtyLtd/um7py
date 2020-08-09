@@ -25,7 +25,7 @@ class EnumeratedValue:
 class Field:
     name: str
     description: str
-    bit_range: Tuple[int]
+    bit_range: Tuple[int, int]
     data_type: str
     access: str
     enumerated_values: Tuple[EnumeratedValue] = tuple()
@@ -100,6 +100,52 @@ class Register:
             elif el.name in fields_and_gaps[-1].keys():
                 fields_and_gaps[-1][el.name] += 1
         return fields_and_gaps
+
+
+@dataclass
+class RegisterEvaluation:
+    register: Register
+    raw_value: int = 0
+
+    def as_tuple(self) -> Tuple[EnumeratedValue]:
+        return tuple(self.field_enum(el) for el in self.field_names)
+
+    def from_tuple(self, fields: Tuple[EnumeratedValue]):
+        raise NotImplementedError("Assigning from tuple is not implemented yet!")
+
+    @property
+    def field_names(self):
+        return [el.name for el in self.register.fields]
+
+    def field_enum(self, *a) -> EnumeratedValue:
+        field_name = a[0]
+        field = self.register.find_field_by(name=field_name)
+        field_value = self.field_value(field_name)
+        return field.find_enum_entry_by(value=field_value)
+
+    def find_field_by(self, name: str = ''):
+        return self.register.find_field_by(name=name)
+
+    def field_value(self, name: str = '') -> int:
+        field = self.register.find_field_by(name=name)
+        if field is None:
+            raise NotImplementedError(f"You provided field '{name}' for register {self.register.name}. "
+                                      f"This does not exist in register. Check the data sheet and provide correct name!")
+        bit_mask = self.set_bits_for_field(field)
+        field_value = self.raw_value & bit_mask
+        return field_value >> field.bit_range[1]
+
+    def set_bits_for_field(self, field: Field) -> int:
+        msb, lsb = field.bit_range
+        return RegisterEvaluation.set_bits_for_range(msb, lsb)
+
+    @staticmethod
+    def set_bits_for_range(msb: int, lsb: int) -> int:
+        return ((1 << lsb) - 1) ^ ((1 << (msb + 1)) - 1)
+
+    def set_field(self, **kw):
+        print(kw)
+        return self.raw_value | 0x01
 
 
 class RslSvdParser:
