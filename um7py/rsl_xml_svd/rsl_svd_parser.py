@@ -140,8 +140,10 @@ class Register:
             raise NotImplementedError(f"Only setting 1 property at a time is supported, but got: {kw}!")
         field = self.find_field_by(name=prop)
         msb, lsb = field.bit_range
-        bit_mask = 1 << (msb - lsb + 1) - 1
-        self.raw_value = (bit_mask & value) << lsb
+        zero_mask = ~(((1 << (msb - lsb + 1)) - 1) << lsb)
+        self.raw_value &= zero_mask
+        bit_mask = (1 << (msb - lsb + 1)) - 1
+        self.raw_value |= (bit_mask & value) << lsb
 
 
 class RslSvdParser:
