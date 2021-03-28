@@ -2,6 +2,7 @@
 # Author: Dr. Konstantin Selyunin
 # License: MIT
 # Date: 28 March 2021
+# NOTE: this only works with python3.8+ !
 import json
 import logging
 from pathlib import Path
