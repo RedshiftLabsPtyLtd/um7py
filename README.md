@@ -3,6 +3,13 @@
 [![PyPI version](https://badge.fury.io/py/um7py.svg)](https://badge.fury.io/py/um7py)
 ![test and package](https://github.com/RedshiftLabsPtyLtd/um7py/workflows/test%20and%20package/badge.svg)
 
+# THIS REPO IS RETIRED
+## Use [rsl_comm_py](https://github.com/RedshiftLabsPtyLtd/rsl_comm_py) instead
+### The code will be kept as-is
+
+Since we support more then `UM7` (`UM7`, `UM8`, `shearwater`),
+we unified communication code in one repo.
+
 **TL;DR:** *"Swiss army knife"* for using 
 the [`UM7`](https://redshiftlabs.com.au/product/um7-orientation-sensor/) 
 orientation sensor with Python 3 (Python 3.6+).
