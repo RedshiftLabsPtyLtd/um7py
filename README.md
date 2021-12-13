@@ -7,7 +7,7 @@
 ## Use [rsl_comm_py](https://github.com/RedshiftLabsPtyLtd/rsl_comm_py) instead
 ### The code will be kept as-is
 
-Since we support more then `UM7` (`UM7`, `UM8`, `shearwater`),
+Why [`rsl_comm_py`](https://github.com/RedshiftLabsPtyLtd/rsl_comm_py) repo? Since we support more then `UM7` (`UM7`, `UM8`, `shearwater`),
 we unified communication code in one repo.
 
 **TL;DR:** *"Swiss army knife"* for using 
